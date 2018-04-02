@@ -1,5 +1,6 @@
 # express
 ###Express入门教程
+http://www.ybao.org/book/express/5418.html
 
 ### 生成 express
 通过应用生成器工具 express 可以快速创建一个应用的骨架。
@@ -86,3 +87,15 @@ app.use(function(err, req, res, next) {
   res.status(500).send('Something broke!');
 });
 ```
+
+### Express会话管理
+```
+npm install express-session --save
+```
+
+express-session的一些方法:
+
+* Session.destroy():删除session，当检测到客户端关闭时调用。
+* Session.reload():当session有修改时，刷新session。
+* Session.regenerate()：将已有session初始化。
+* Session.save()：保存session。
