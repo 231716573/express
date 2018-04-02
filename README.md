@@ -94,7 +94,6 @@ npm install express-session --save
 ```
 
 express-session的一些方法:
-
 * Session.destroy():删除session，当检测到客户端关闭时调用。
 * Session.reload():当session有修改时，刷新session。
 * Session.regenerate()：将已有session初始化。
