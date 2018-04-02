@@ -77,3 +77,12 @@ npm install cookie-parser --save
 npm install multer --save
 
 ```
+
+### 错误处理
+
+```
+app.use(function(err, req, res, next) {
+  console.error(err.stack);
+  res.status(500).send('Something broke!');
+});
+```
