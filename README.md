@@ -159,3 +159,25 @@ var server = app.listen(app.get('port'), function() {
 ```
 nodemon app.js
 ```
+
+### express 使其支持'.html'后缀
+在app.js中，将
+```
+app.set('view engine', 'jade');
+```
+替换为
+```
+app.engine('.html', require('ejs').__express);
+app.set('view engine', 'html');
+```
+就可以了。
+
+其中第一句是让ejs能够识别后缀为’.html’的文件，app.engine 相当于 express2 中的 app.register 。
+
+第二句是使在调用render函数时能自动为我们加上’.html’ 后缀。如果没有第二句，我们就得把res.render(‘users’)写成res.render(‘users.html’)，否则会报错。
+
+需要注意的是，用这种方法在实现模版嵌套的时候，还是需要加后缀。比如在index.html里面引用header.html ：
+```
+<% include header.html %>
+```
+这里如果省略了 .html ，还是会报错。
