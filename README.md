@@ -98,3 +98,64 @@ express-session的一些方法:
 * Session.reload():当session有修改时，刷新session。
 * Session.regenerate()：将已有session初始化。
 * Session.save()：保存session。
+
+### nodemon设置修改代码后服务自动重启
+``
+npm install -g nodemon
+```
+或者安装到本地
+```
+npm install nodemon --save
+```
+在项目目录下创建 nodemon.json 文件
+```
+{
+  "restartable": "rs",
+  "ignore": [
+    ".git",
+    ".svn",
+    "node_modules/**/node_modules"
+  ],
+  "verbose": true,
+  "execMap": {
+    "js": "node --harmony"
+  },
+  "watch": [
+
+  ],
+  "env": {
+    "NODE_ENV": "development"
+  },
+  "ext": "js json"
+}
+```
+restartable-设置重启模式 <br>
+ignore-设置忽略文件 <br>
+verbose-设置日志输出模式，true 详细模式 <br>
+execMap-设置运行服务的后缀名与对应的命令 <br>
+```
+{ 
+  "js": "node –harmony" 
+} 
+```
+表示使用 nodemon 代替 node <br>
+watch-监听哪些文件的变化，当变化的时候自动重启 <br>
+ext-监控指定的后缀文件名<br>
+
+修改app.js文件 <br>
+记得注稀最后一行的：module.exports = app;<br>
+```
+var debug = require('debug')('my-application'); // debug模块
+app.set('port', process.env.PORT || 3000); // 设定监听端口
+
+//启动监听
+var server = app.listen(app.get('port'), function() {
+  debug('Express server listening on port ' + server.address().port);
+});
+
+//module.exports = app;//这是 4.x 默认的配置，分离了 app 模块,将它注释即可，上线时可以重新改回来
+```
+配置已经完成了，现在就差在cmd里输入
+```
+nodemon app.js
+```
