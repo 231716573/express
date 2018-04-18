@@ -181,3 +181,19 @@ app.set('view engine', 'html');
 <% include header.html %>
 ```
 这里如果省略了 .html ，还是会报错。
+
+
+### NodeJS+Express解决跨域问题
+在app.js 里面的 ```var app = express();``` 下面添加：
+```
+app.use("*", function (req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header("Access-Control-Allow-Headers", "Content-Type,Content-Length, Authorization, Accept,X-Requested-With");
+  res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");
+  if (req.method === 'OPTIONS') {
+    res.send(200)
+  } else {
+    next()
+  }
+});
+```
