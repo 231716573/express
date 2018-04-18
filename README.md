@@ -182,7 +182,7 @@ app.set('view engine', 'html');
 ```
 这里如果省略了 .html ，还是会报错。
 
-
+  
 ### NodeJS+Express解决跨域问题
 在app.js 里面的 ```var app = express();``` 下面添加：
 ```
