@@ -197,3 +197,21 @@ app.use("*", function (req, res, next) {
   }
 });
 ```
+
+### Express+MongoDB 通过自动生成的 _id 查询数据
+
+```
+var ObjectID = require('mongodb').ObjectID;  // 拿到mongodb自带的 ObjectID 方法
+```
+通过mongodb取得数据
+```
+// 通过 _id 在 users 表读取用户信息
+User.getId = function(id, callback) {
+  mongodb.find({_id: ObjectID(id)}, 'users', function(err, result) {
+    if (err) {
+      return callback(err)
+    }
+    callback(null, result[0])
+  })
+}
+```
