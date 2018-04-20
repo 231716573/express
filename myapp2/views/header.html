@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<!-- 系统访问页面图片返回 403 的解决方法 -->
+  <meta name="referrer" content="no-referrer" />
+  <meta name=format-detection content="telephone=no, email=no">
+  <meta name=apple-mobile-web-app-capable content=yes>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+	<title><%= title %></title>
+	<link rel="alternate icon" type="image/x-icon" href="/images/favicon.icon">
+	<link rel="stylesheet" href="/layui/css/layui.css">
+	<link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+	<script type="text/javascript" src="/bootstrap/js/jquery-2.1.4.min.js"></script>
+	<script type="text/javascript" src="/bootstrap/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="/layui/layui.all.js"></script>
+</head>
+<body>
+
+<!-- 导航栏 -->
+<nav class="navbar navbar-default">
+	<div class="container-fluid">
+		<div class="navbar-header">
+			<a href="/login" class="navbar-brand" style="width: 55px;">
+				<img src="/images/logo.png" alt="logo" style="width: 100%;">
+			</a>
+		</div>
+
+		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+			<ul class="nav navbar-nav">
+				<li><a href="/admin/">后台首页</a></li>
+				<li><a href="/">网站首页</a></li>
+			</ul>
+			<ul class="nav navbar-nav navbar-right">
+				<li class="dropdown">
+					<a href="javascript:void(0)" class="dropdown-toggle"
+						 data-toggle="dropdown"
+						 role="button"
+						 aria-haspopup="true"
+						 aria-expanded="false">
+						你好，<span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu">
+						<li><a href="/admin/profile">个人资料</a></li>
+						<li><a href="/admin/lostpsw">修改密码</a></li>
+						<li><a href="/admin/logout">退出</a></li>
+					</ul>
+				</li>
+				<li role="presentation"><a href="/login">登录</a></li>
+				<li role="presentation"><a href="/login/register">注册</a></li>
+			</ul>
+		</div>
+	</div>
+</nav>

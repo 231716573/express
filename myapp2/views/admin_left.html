@@ -1,0 +1,98 @@
+<style>
+.nav-header { color: #fff; }
+.nav-portrait img { max-width: 150px; max-height: 150px; }
+div.bg-primary { padding: 10px; }
+.bg-default li a { padding: 10px 20px; }
+a.nav-header:focus, a.nav-header:hover { color: #fff; text-decoration: none; }
+</style>
+
+<div class="col-xs-12 col-sm-3 col-md-2">
+	<!-- 个人资料 -->
+	<div class="nav-portrait" style="text-align: center; margin-bottom: 20px;">
+		<img src="/images/logo.png" alt="个人头像" class="img-circle">
+		<h3 style="font-size: 14px; margin: 7px 0;"></h3>
+		<p>
+			<a href="/admin/profile">个人资料 <i class="glyphicon glyphicon-pencil"></i></a>
+		</p>
+	</div>
+	<!-- 时钟 -->
+	<div id="clock">
+		<p class="date"></p>
+		<p class="time"></p>
+	</div>
+	<!-- 导航 -->
+	<div class="slidebar-nav bs-example-bg-classes">
+
+		<!-- 文章管理 -->
+		<div class="bg-primary">
+			<a href="#table-menu" class="nav-header" data-toggle="collapse"><i class="icon-table"></i>文章管理</a>
+		</div>
+		<ul id="table-menu" class="nav nav-list collaspse in bg-default">
+			<li><a href="/adminArticle?active=article" name="article">文章列表</a></li>
+			<li><a href="/admin/category?active=category" name="category">文章分类</a></li>
+		</ul>
+
+		<!-- 前台管理 -->
+		<div class="bg-primary">
+			<a href="#menu-menu" class="nav-header" data-toggle="collapse"><i class="icon-reorder"></i>前台管理</a>
+		</div>
+		<ul id="menu-menu" class="nav nav-list collaspse in bg-default">
+			<li><a href="/admin/nav?active=nav" name="nav">导航栏</a></li>
+			<li><a href="/admin/link?active=link" name="link">友情链接</a></li>
+		</ul>
+
+		<!-- 隐私管理 -->
+		<div class="bg-primary">
+			<a href="#privacy-menu" class="nav-header" data-toggle="collapse"><i class="icon-th-large"></i>隐私管理</a>
+		</div>
+		<ul id="privacy-menu" class="nav nav-list collaspse in bg-default">
+			<li><a href="/admin/picture?active=picture" name="picture">相册</a></li>
+			<li><a href="/admin/diary?active=diary" name="diary">日记</a></li>
+		</ul>
+
+		<!-- 隐私管理 -->
+		<div class="bg-primary">
+			<a href="#order-menu" class="nav-header" data-toggle="collapse"><i class="icon-th-large"></i>系统管理</a>
+		</div>
+		<ul id="order-menu" class="nav nav-list collaspse in bg-default">
+			<li><a href="/admin/config?active=config" name="config">网站配置</a></li>
+		</ul>
+
+	</div>
+</div>
+
+<script type="text/javascript" src="/javascripts/dom.js"></script>
+<script type="text/javascript">
+$(function () {
+	adminLeftProfile()
+
+	$(".slidebar-nav li").each(function(i) {
+		if ($(this).children('a').attr('name') == GetString('active')) {
+			$(this).children('a').css({
+				'font-weight': 'bold',
+				'color': 'red',
+				'font-size': '15px'
+			})
+		}
+	})
+})
+function adminLeftProfile() {
+	$.ajax({
+		type: "GET",
+		url: '/admin/profile/user',
+		success: function (data) {
+			// console.log(data)
+			if (data.code == 0) {
+				data.data.user_img && $('.nav-portrait img').attr('src', data.data.user_img)
+				data.data.user_realname && $('.nav-portrait h3').html(data.data.user_realname)
+				// 有性别 -> 默认头像
+				if (!data.data.user_img && data.data.user_sex == 'boy') {
+					$('.nav-portrait img').attr('src', '/images/boy-default.jpg')
+				} else if (!data.data.user_img && data.data.user_sex == 'girl') {
+					$('.nav-portrait img').attr('src', '/images/girl-default.jpg')
+				}
+			}
+		} 
+	})
+}
+</script>

@@ -1,0 +1,124 @@
+<%- include ../header.html %>
+
+
+<div class="container">
+	<div class="row" style="margin-top: 100px">
+		<div class="col-md-6 col-sm-offset-3">
+			<div class="panel panel-primary">
+				<!-- 标题 -->
+				<div class="panel-heading">后台登录</div>
+
+				<!-- 主体 -->
+				<div class="panel-body">
+					<div action="" method="post" class="form-horizontal">
+						<!-- 用户名 -->
+						<div class="form-group">
+							<label for="user_name" class="col-sm-2 control-label">用户名</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control" name="user_name" placeholder="请输入用户名">	
+							</div>
+						</div>
+						<!-- 密码 -->
+						<div class="form-group">
+							<label for="user_pass" class="col-sm-2 control-label">密&nbsp;&nbsp;&nbsp;&nbsp;码</label>
+							<div class="col-sm-10">
+								<input type="password" class="form-control" name="user_pass" placeholder="请输入密码">	
+							</div>
+						</div>
+						<!-- 验证码 -->
+						<div class="form-group">
+							<label for="code" class="col-sm-2 control-label">验证码</label>
+							<div class="col-sm-10" style="position: relative;">
+								<input type="text" class="form-control" name="code" placeholder="请输入验证码" style=" width: 120px;">
+								<span class="captcha-code" onclick="getCode()" style="position: absolute; left: 150px; top: 0;"></span>
+								<input type="hidden" name="sure_code" class="sure_code">
+							</div>
+						</div>
+						<!-- 登录 -->
+						<div class="form-group">
+							<div class="col-sm-offset-2 col-sm-10">
+								<button type="submit" class="btn btn-primary" onclick="login(this)">登录</button>
+								<a href="javascript:void(0);" class="forget-psw">忘记密码？</a>
+								<span class="findxb" style="display: none; color:red;">找小波！</span>
+							</div>
+						</div>
+						<!-- 内容出错提示 -->
+						<div class="form-group">
+							<div class="col-sm-offset-2 col-sm-10" style="color: red;">
+								<p class="error_ok"></p>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<!-- 尾部 -->
+				<div class="panel-footer text-right">版权所有，小波专用</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+$(function () {
+	$(".forget-psw").bind("click", function () {
+		$(".forget-psw").hide();
+		$(".findxb").show()
+	})
+
+	getCode()
+})
+
+function getCode() {
+	$.ajax({
+		type: "GET",
+		url: "/login/captcha",
+		success: function(data){
+			$('.sure_code').val(data.text)
+			$(".captcha-code").html(data.data)
+		}
+	});
+}
+
+function login(obj) {
+	$(obj).attr("disabled", "disabled")
+	$(".error_ok").html('');
+
+	if ($('input[name=user_pass]').val().length == 0 || $('input[name=user_name]').val().length == 0) {
+		$(".error_ok").html('账号或者密码不能为空')
+		$(obj).removeAttr("disabled")
+		return
+	}
+	if ( $("input[name=code]").val().toUpperCase() != $("input[name=sure_code]").val().toUpperCase() ){
+		$(".error_ok").html('验证码不正确')
+		$(obj).removeAttr("disabled")
+		return
+	}
+
+	var data = {
+		name: $('input[name=user_name]').val(),
+		password: $('input[name=user_pass]').val()
+	}
+
+	$.ajax({
+		type: "POST",
+		url: "/login",
+		data: data,
+		dataType: 'json',
+		success: function(data){
+			// console.log(data)
+
+			var layerIcon = data.code == 0 ? 1 : 2
+			layer.msg(data.msg, {
+			  icon: layerIcon,
+			  time: 2000 //2秒关闭（如果不配置，默认是3秒）
+			}, function(){
+			  if (data.code === 0) {
+			  	window.location.href = '/admin'
+			  }
+			  $(obj).removeAttr("disabled")
+			}); 
+		}
+	});
+}
+</script>
+
+<%- include ../footer.html %>
