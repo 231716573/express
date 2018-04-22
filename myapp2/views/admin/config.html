@@ -7,11 +7,11 @@ textarea { width: 100%; padding:5px; box-sizing: border-box; border-radius: 5px;
 .operation a { margin:0 5px; }
 .create-config { position: fixed; z-index: 999; top:0; left:0; width: 100%; height: 100%; }
 .create-config .create-config-bg { position: fixed; z-index: 1000; width: 100%; height: 100%; top: 0; left: 0; background:rgba(0, 0, 0, 0.5);  }
-.create-config .create-config-wrapper { position: fixed; z-index: 1001; width: 500px; height: 500px; background-color: #fff; left: 50%; top: 10%; margin-left: -250px; border-radius: 10px; }
-.create-config .create-config-wrapper h3 { text-align: center; font-size: 18px; }
+.create-config .create-config-wrapper { position: fixed; z-index: 1001; width: 500px;  background-color: #fff; left: 50%; top: 15%; margin-left: -250px; border-radius: 10px; }
+.create-config .create-config-wrapper h3 { text-align: center; font-size: 18px; position: relative; margin-bottom: 30px}
 </style>
 <div class="col-xs-12 col-sm-9 col-md-10 container">
-	<h3 class="form-group">配置项列表<smal class="pull-right"><a href="javascript:void(0);" onclick="createConfig()" class="btn btn-primary">添加配置项</a></smal></h3>
+	<h3 class="form-group">配置项列表<smal class="pull-right"><a href="javascript:void(0);"  class="btn btn-primary btn-create-newconfig">添加配置项</a></smal></h3>
 	<hr />
 	<div>
 		<table class="table table-bordered">
@@ -48,53 +48,92 @@ textarea { width: 100%; padding:5px; box-sizing: border-box; border-radius: 5px;
 			</div>
 		</div>
 	</div>
-	<div class="create-config">
+	<!-- 添加系统配置 -->
+	<div class="create-config" style="display: none;">
 		<div class="create-config-bg"></div>
 		<div class="create-config-wrapper">
 			<h3>添加系统配置</h3>
-			<table class="">
-				<tbody>
-					<tr>
-						<td>标题：</td>
-						<td>标题：</td>
-					</tr>
-					<tr>
-						<td>名称：</td>
-						<td>标题：</td>
-					</tr>
-					<tr>
-						<td>类型：</td>
-						<td>标题：</td>
-					</tr>
-					<tr>
-						<td>排序：</td>
-						<td>说明：</td>
-					</tr>
-					<tr>
-						<td>说明：</td>
-						<td>说明：</td>
-					</tr>
-				</tbody>
-			</table>
+			<div class="form-horizontal" style="margin: 0 20px 0 0;">
+				<div class="form-group form-group-xl">
+			    <label class="col-sm-2 control-label" for="create_title">标题</label>
+			    <div class="col-sm-10">
+			      <input class="form-control" type="text" name="create_title" placeholder="请输入标题">
+			    </div>
+				</div>
+				<div class="form-group form-group-xl">
+			    <label class="col-sm-2 control-label" for="create_name">名称</label>
+			    <div class="col-sm-10">
+			      <input class="form-control" type="text" name="create_name" placeholder="请输入名称">
+			    </div>
+				</div>
+				<div class="form-group form-group-xl">
+			    <label class="col-sm-2 control-label" for="create_contain">内容</label>
+			    <div class="col-sm-10">
+			      <textarea name="create_contain" class="form-control" cols="20" rows="5" placeholder="请输入内容"></textarea>
+			    </div>
+				</div>
+				<div class="form-group form-group-xl">
+			    <label class="col-sm-2 control-label"></label>
+			    <div class="col-sm-10">
+			      <button type="submit" class="btn btn-primary" style="margin-right: 20px;" onclick="createSubmit(this)">提交</button>
+			      <button type="submit" class="btn btn-info create_back">返回</button>
+			    </div>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
 
 <script type="text/javascript">
 $(function () {
+	getConfig()
+	$('.btn-create-newconfig').click(function () {
+		$('.create-config').show()
+	})
+	$('.create_back').click(function () {
+		$('.create-config').fadeOut()
+	})
+})
+function getConfig() {
 	$.ajax({
-		type: 'POST',
-		url: 'http://192.168.1.219:8080/nis-service/diagnoses',
-		data: {
-			diagnoseCode: '123123123213',
-			diagnoseName: 'hahaha',
-			diagnoseType: '1',
-			target: '333333333'
-		},
-		success: function (data) {
+		type: 'GET',
+		url: '/config/getConfig',
+		dataType: 'json',
+		success:function (data) {
 			console.log(data)
 		}
 	})
-})
+}
+
+function createSubmit(obj) {
+	if ($('input[name="create_title"]').val() == "" || $('input[name="create_name"]').val() == "" || $('textarea[name="create_contain"]').val() == "") {
+		layer.msg('内容不能留空');
+
+		return
+	}
+
+	$(obj).attr('disabled', 'disabled')
+	var data = {
+		createTitle: $('input[name="create_title"]').val(),
+		createName: $('input[name="create_name"]').val(),
+		createContain: $('textarea[name="create_contain"]').val(),
+	}
+
+	$.ajax({
+		type: 'POST',
+		url: '/config/createConfig',
+		data: data,
+		dataType: 'json',
+		success:function (data) {
+			var layerIcon = data.code == 0 ? 1 : 2
+			layer.msg(data.msg, {
+			  icon: layerIcon,
+			  time: 2000 //2秒关闭（如果不配置，默认是3秒）
+			}, function(){
+				window.location.reload();
+			}); 
+		}
+	})
+}
 </script>
 <%- include ../footer.html %>
