@@ -35,7 +35,7 @@
 				<div class="form-group form-group-xl">
 			    <label class="col-sm-2 control-label" for="create_order">排序</label>
 			    <div class="col-sm-10">
-			      <input class="form-control" type="text" name="create_order" placeholder="请输入标题">
+			      <input class="form-control" type="text" name="create_order" placeholder="请输入排序">
 			    </div>
 				</div>
 				<div class="form-group form-group-xl">
@@ -76,7 +76,7 @@
 				<div class="form-group form-group-xl">
 			    <label class="col-sm-2 control-label" for="update_order">排序</label>
 			    <div class="col-sm-10">
-			      <input class="form-control" type="text" name="update_order" placeholder="请输入标题">
+			      <input class="form-control" type="text" name="update_order" placeholder="请输入排序">
 			    </div>
 				</div>
 				<div class="form-group form-group-xl">
@@ -123,7 +123,22 @@ $(function () {
 
 // 获取分类
 function getCategory() {
-
+	$.ajax({
+		type: 'GET',
+		url: '/category/getCategory',
+		dataType: 'json',
+		success: function (data) {
+			console.log(data)
+			if (data.code == 0) {
+				var newTr = '';
+				for (var i = 0; i < data.data.length; i++) {
+					newTr += '<tr><td>'+Number(i+1)+'</td><td>'+data.data[i].name+'</td><td>'+data.data[i].alias+'</td><td style="text-align: left;">'+data.data[i].url+'</td><td class="operation"><a href="javascript:void(0);" onclick="updateConfig(\''+data.data[i].title+'\')">修改</a><a href="javascript:void(0);" onclick="removeConfig(\''+data.data[i].title+'\')">删除</a></td></tr>';
+				}
+				
+				$('.config-list').append(newTr)
+			}
+		}
+	})
 }
 
 function createSubmit(obj) {
@@ -142,6 +157,13 @@ function createSubmit(obj) {
 		dataType: 'json',
 		success: function (data) {
 			console.log(data)
+			var layerIcon = data.code == 0 ? 1 : 2
+			layer.msg(data.msg, {
+			  icon: layerIcon,
+			  time: 2000 //2秒关闭（如果不配置，默认是3秒）
+			}, function(){
+				layerIcon == 1 ? window.location.reload() : $(obj).removeAttr('disabled')
+			}); 
 		}
 	})
 }
