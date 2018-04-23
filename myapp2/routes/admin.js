@@ -60,4 +60,8 @@ router.post('/profile/user', function (req, res, next) {
 router.get('/config', function(req, res, next) {
   res.render('admin/config', { title: '网站配置' })
 });
+// >>>>>>>>>>>>>>>>>>>>>>>>跳转到文章分类
+router.get('/category', function(req, res, next) {
+	res.render('category/index', { title: '网站配置' })
+})
 module.exports = router;

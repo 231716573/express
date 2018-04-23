@@ -1,15 +1,8 @@
 <%- include ../header.html %>
 
 <%- include ../admin_left.html %>
-<style type="text/css">
-.table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th { vertical-align: middle; text-align: center; }
-textarea { width: 100%; padding:5px; box-sizing: border-box; border-radius: 5px; border: 1px solid #ccc; resize: none; }
-.operation a { margin:0 5px; }
-.create-config { position: fixed; z-index: 999; top:0; left:0; width: 100%; height: 100%; }
-.create-config .create-config-bg { position: fixed; z-index: 1000; width: 100%; height: 100%; top: 0; left: 0; background:rgba(0, 0, 0, 0.5);  }
-.create-config .create-config-wrapper { position: fixed; z-index: 1001; width: 500px;  background-color: #fff; left: 50%; top: 15%; margin-left: -250px; border-radius: 10px; }
-.create-config .create-config-wrapper h3 { text-align: center; font-size: 18px; position: relative; margin-bottom: 30px}
-</style>
+<link rel="stylesheet" href="/stylesheets/admin-common.css">
+
 <div class="col-xs-12 col-sm-9 col-md-10 container">
 	<h3 class="form-group">配置项列表<smal class="pull-right"><a href="javascript:void(0);"  class="btn btn-primary btn-create-newconfig">添加配置项</a></smal></h3>
 	<hr />
@@ -17,36 +10,21 @@ textarea { width: 100%; padding:5px; box-sizing: border-box; border-radius: 5px;
 		<table class="table table-bordered">
 			<thead>
 				<tr class="info">
-					<th style="width: 80px;">排序</th>
+					<th style="width: 80px;"></th>
 					<th style="width: 150px;">标题</th>
 					<th style="width: 150px;">名称</th>
 					<th>内容</th>
 					<th style="width: 120px;">操作</th>
 				</tr>
 			</thead>
-			<tbody>
-				<tr>
-					<td>
-						<input type="text" value="1" style="width: 40px; padding: 3px 5px; text-align: center;">
-					</td>
-					<td>config-title</td>
-					<td>config-name</td>
-					<td style="text-align: left;">
-						<textarea rows="3">啦啦啦啦啦啦</textarea>
-					</td>
-					<td class="operation">
-						<a href="">修改</a>
-						<a href="">删除</a>
-					</td>
-				</tr>
-			</tbody>
+			<tbody class="config-list"></tbody>
 		</table>
-		<div class="form-group">
+<!-- 		<div class="form-group">
 			<div class="col-sm-8">
 				<button type="submit" class="btn btn-primary" style="margin-right: 20px;">提交</button>
 				<input type="button" class="back btn btn-info" value="返回" onclick="history.go(-1)">
 			</div>
-		</div>
+		</div> -->
 	</div>
 	<!-- 添加系统配置 -->
 	<div class="create-config" style="display: none;">
@@ -82,6 +60,41 @@ textarea { width: 100%; padding:5px; box-sizing: border-box; border-radius: 5px;
 			</div>
 		</div>
 	</div>
+
+	<!-- 修改系统配置 -->
+	<div class="update-config" style="display: none;">
+		<div class="create-config-bg"></div>
+		<div class="create-config-wrapper">
+			<h3>修改系统配置</h3>
+			<div class="form-horizontal" style="margin: 0 20px 0 0;">
+				<div class="form-group form-group-xl">
+			    <label class="col-sm-2 control-label" for="update_title">标题</label>
+			    <div class="col-sm-10">
+			      <input class="form-control" type="text" name="update_title" placeholder="请输入标题">
+			    </div>
+				</div>
+				<div class="form-group form-group-xl">
+			    <label class="col-sm-2 control-label" for="update_name">名称</label>
+			    <div class="col-sm-10">
+			      <input class="form-control" type="text" name="update_name" placeholder="请输入名称">
+			    </div>
+				</div>
+				<div class="form-group form-group-xl">
+			    <label class="col-sm-2 control-label" for="update_contain">内容</label>
+			    <div class="col-sm-10">
+			      <textarea name="update_contain" class="form-control" cols="20" rows="5" placeholder="请输入内容"></textarea>
+			    </div>
+				</div>
+				<div class="form-group form-group-xl">
+			    <label class="col-sm-2 control-label"></label>
+			    <div class="col-sm-10">
+			      <button type="submit" class="btn btn-primary" style="margin-right: 20px;" onclick="updateSubmit(this)">提交</button>
+			      <button type="submit" class="btn btn-info update_back">返回</button>
+			    </div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 
 <script type="text/javascript">
@@ -90,17 +103,73 @@ $(function () {
 	$('.btn-create-newconfig').click(function () {
 		$('.create-config').show()
 	})
-	$('.create_back').click(function () {
+	$('.create_back, .update_back').click(function () {
 		$('.create-config').fadeOut()
+		$('.update-config').fadeOut()
 	})
 })
+
+// 获取数据
 function getConfig() {
 	$.ajax({
 		type: 'GET',
 		url: '/config/getConfig',
 		dataType: 'json',
 		success:function (data) {
+			// console.log(data);
+
+			if (data.code == 0) {
+				var newTr = '';
+				for (var i = 0; i < data.data.length; i++) {
+					newTr += '<tr><td>'+Number(i+1)+'</td><td>'+data.data[i].title+'</td><td>'+data.data[i].name+'</td><td style="text-align: left;"><textarea readonly>'+data.data[i].con+'</textarea></td><td class="operation"><a href="javascript:void(0);" onclick="updateConfig(\''+data.data[i].title+'\')">修改</a><a href="javascript:void(0);" onclick="removeConfig(\''+data.data[i].title+'\')">删除</a></td></tr>';
+				}
+				
+				$('.config-list').append(newTr)
+			}
+		}
+	})
+}
+
+// 更新数据
+function updateConfig(title) {
+	$(".update-config").show();
+	$.ajax({
+		type: 'GET',
+		url: '/config/updateConfig?title='+title,
+		dataType: 'json',
+		success:function (data) {
 			console.log(data)
+			$(".update-config").show();
+			if (data.code === 0) {
+				$('input[name="update_title"]').val(data.data.title)
+				$('input[name="update_name"]').val(data.data.name)
+				$('textarea[name="update_contain"]').val(data.data.con)
+			}
+		}
+	})
+}
+
+function updateSubmit(obj) {
+	$(obj).attr('disabled', 'disabled')
+
+	$.ajax({
+		type: 'POST',
+		url: '/config/updateConfig',
+		data: {
+			title: $('input[name="update_title"]').val(),
+			name: $('input[name="update_name"]').val(),
+			contain: $('textarea[name="update_contain"]').val()
+		},
+		dataType: 'json',
+		success: function (data) {
+			// console.log(data)
+			var layerIcon = data.code == 0 ? 1 : 2
+			layer.msg(data.msg, {
+			  icon: layerIcon,
+			  time: 2000 //2秒关闭（如果不配置，默认是3秒）
+			}, function(){
+				window.location.reload();
+			}); 
 		}
 	})
 }
@@ -123,6 +192,24 @@ function createSubmit(obj) {
 		type: 'POST',
 		url: '/config/createConfig',
 		data: data,
+		dataType: 'json',
+		success:function (data) {
+			var layerIcon = data.code == 0 ? 1 : 2
+			layer.msg(data.msg, {
+			  icon: layerIcon,
+			  time: 2000 //2秒关闭（如果不配置，默认是3秒）
+			}, function(){
+				window.location.reload();
+			}); 
+		}
+	})
+}
+
+function removeConfig(title) {
+	$.ajax({
+		type: 'POST',
+		url: '/config/removeConfig',
+		data: {title: title},
 		dataType: 'json',
 		success:function (data) {
 			var layerIcon = data.code == 0 ? 1 : 2

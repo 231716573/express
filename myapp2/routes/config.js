@@ -30,8 +30,73 @@ router.post('/createConfig', function(req, res, next) {
 });
 
 router.get('/getConfig', function(req, res, next) {
-  res.send({
-  	msg: 'getConfig'
+  config.get(null, function (err, conf) {
+    res.send({
+      code: 0,
+      data: conf,
+      msg: '查询成功！'
+    })
   })
 });
+
+
+router.get('/updateConfig', function(req, res, next) {
+  var title = req.query.title;
+
+  config.get(title, function (err, conf) {
+    res.send({
+      code: 0,
+      data: conf[0],
+      msg: '查询成功！'
+    })
+  })
+})
+
+router.post('/updateConfig', function (req, res, next) {
+  var title = req.body.title,
+      name = req.body.name,
+      con = req.body.contain
+
+  var data = {
+    title, 
+    name, 
+    con,
+    update_time: Math.round(new Date() / 1000)
+  }
+
+  config.modify(title, data, function(err, result) {
+    if (err) {
+      res.send({
+        code: 2,
+        msg: err
+      })
+      return
+    }
+
+    res.send({
+      code: 0,
+      msg: '修改成功！'
+    })
+  })
+})
+
+
+router.post('/removeConfig', function (req, res, next) {
+  var title = req.body.title;
+
+  config.delete(title, function(err, result) {
+    if (err) {
+      res.send({
+        code: 2,
+        msg: err
+      })
+      return
+    }
+    res.send({
+      code: 0,
+      data: result,
+      msg: '修改成功！'
+    })
+  })
+})
 module.exports = router

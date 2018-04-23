@@ -89,3 +89,28 @@ Db.prototype.update = function (data, updateData, col, cb) {
 		})
 	})
 }
+
+
+// 删除
+Db.prototype.remove = function (data, col, cb) {
+	var removeData = function (db, callback) {
+		// 连接到表
+		var collection = db.collection(col);
+
+		collection.remove(data, function (err, result) {
+			if (err) {
+				console.log('Error:' + err)
+				return cb(err)
+			}
+			callback(null, result)
+		})
+	}
+
+	MongoClient.connect(this.url, function (err, db) {
+		console.log('mongodb->remove 连接成功');
+		removeData(db, function (newerr, result) {
+			db.close();
+			cb(null, result);
+		})
+	})
+}

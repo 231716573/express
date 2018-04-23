@@ -1,0 +1,150 @@
+<%- include ../header.html %>
+
+<%- include ../admin_left.html %>
+<link rel="stylesheet" href="/stylesheets/admin-common.css">
+
+<div class="col-xs-12 col-sm-9 col-md-10 container">
+	<h3 class="form-group">文章分类<smal class="pull-right"><a href="javascript:void(0);"  class="btn btn-primary btn-create-newconfig">添加文章分类</a></smal></h3>
+	<hr />
+	<div>
+		<table class="table table-bordered">
+			<thead>
+				<tr class="info">
+					<th style="width: 80px;">排序</th>
+					<th style="width: 140px;">名称</th>
+					<th style="width: 140px;">英文</th>
+					<th>链接</th>
+					<th style="width: 120px;">操作</th>
+				</tr>
+			</thead>
+			<tbody class="config-list"></tbody>
+		</table>
+<!-- 		<div class="form-group">
+			<div class="col-sm-8">
+				<button type="submit" class="btn btn-primary" style="margin-right: 20px;">提交</button>
+				<input type="button" class="back btn btn-info" value="返回" onclick="history.go(-1)">
+			</div>
+		</div> -->
+	</div>
+	<!-- 添加文章分类 -->
+	<div class="create-config" style="display: none;">
+		<div class="create-config-bg"></div>
+		<div class="create-config-wrapper">
+			<h3>添加文章分类</h3>
+			<div class="form-horizontal" style="margin: 0 20px 0 0;">
+				<div class="form-group form-group-xl">
+			    <label class="col-sm-2 control-label" for="create_order">排序</label>
+			    <div class="col-sm-10">
+			      <input class="form-control" type="text" name="create_order" placeholder="请输入标题">
+			    </div>
+				</div>
+				<div class="form-group form-group-xl">
+			    <label class="col-sm-2 control-label" for="create_name">名称</label>
+			    <div class="col-sm-10">
+			      <input class="form-control" type="text" name="create_name" placeholder="请输入名称">
+			    </div>
+				</div>
+				<div class="form-group form-group-xl">
+			    <label class="col-sm-2 control-label" for="create_alias">英文</label>
+			    <div class="col-sm-10">
+			      <input class="form-control" type="text" name="create_alias" placeholder="请输入英文">
+			    </div>
+				</div>
+				<div class="form-group form-group-xl">
+			    <label class="col-sm-2 control-label" for="create_url">链接</label>
+			    <div class="col-sm-10">
+			      <input class="form-control" type="text" name="create_url" placeholder="请输入链接">
+			    </div>
+				</div>
+				<div class="form-group form-group-xl">
+			    <label class="col-sm-2 control-label"></label>
+			    <div class="col-sm-10">
+			      <button type="submit" class="btn btn-primary" style="margin-right: 20px;" onclick="createSubmit(this)">提交</button>
+			      <button type="submit" class="btn btn-info create_back">返回</button>
+			    </div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- 修改文章分类 -->
+	<div class="update-config" style="display: none;">
+		<div class="create-config-bg"></div>
+		<div class="create-config-wrapper">
+			<h3>修改文章分类</h3>
+			<div class="form-horizontal" style="margin: 0 20px 0 0;">
+				<div class="form-group form-group-xl">
+			    <label class="col-sm-2 control-label" for="update_order">排序</label>
+			    <div class="col-sm-10">
+			      <input class="form-control" type="text" name="update_order" placeholder="请输入标题">
+			    </div>
+				</div>
+				<div class="form-group form-group-xl">
+			    <label class="col-sm-2 control-label" for="update_name">名称</label>
+			    <div class="col-sm-10">
+			      <input class="form-control" type="text" name="update_name" placeholder="请输入名称">
+			    </div>
+				</div>
+				<div class="form-group form-group-xl">
+			    <label class="col-sm-2 control-label" for="update_alias">英文</label>
+			    <div class="col-sm-10">
+			      <input class="form-control" type="text" name="update_alias" placeholder="请输入英文">
+			    </div>
+				</div>
+				<div class="form-group form-group-xl">
+			    <label class="col-sm-2 control-label" for="update_url">链接</label>
+			    <div class="col-sm-10">
+			      <input class="form-control" type="text" name="update_url" placeholder="请输入链接">
+			    </div>
+				</div>
+				<div class="form-group form-group-xl">
+			    <label class="col-sm-2 control-label"></label>
+			    <div class="col-sm-10">
+			      <button type="submit" class="btn btn-primary" style="margin-right: 20px;" onclick="updateSubmit(this)">提交</button>
+			      <button type="submit" class="btn btn-info update_back">返回</button>
+			    </div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+$(function () {
+	getCategory()
+	$('.btn-create-newconfig').click(function () {
+		$('.create-config').show()
+	})
+	$('.create_back, .update_back').click(function () {
+		$('.create-config').fadeOut()
+		$('.update-config').fadeOut()
+	})
+})
+
+// 获取分类
+function getCategory() {
+
+}
+
+function createSubmit(obj) {
+	$(obj).attr('disabled', 'disabled')
+	var data = {
+		order: $('input[name=create_order]').val(),
+		name: $('input[name=create_name]').val(),
+		alias: $('input[name=create_alias]').val(),
+		url: $('input[name=create_url]').val(),
+	}
+
+	$.ajax({
+		type: 'POST',
+		url: '/category/createCategory',
+		data: data,
+		dataType: 'json',
+		success: function (data) {
+			console.log(data)
+		}
+	})
+}
+
+</script>
+<%- include ../footer.html %>

@@ -16,7 +16,7 @@ Config.prototype.save = function(callback) {
 	var date = new Date();
 	//存储各种时间格式，方便以后扩展
   var time = {
-    date: date.getTime(),
+    date: Math.round(new Date() / 1000),
     year : date.getFullYear(),
     month : date.getFullYear() + "-" + (date.getMonth() + 1),
     day : date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate(),
@@ -41,7 +41,7 @@ Config.prototype.save = function(callback) {
 
 }
 
-// 读取文章以相关信息
+// 通过标题，读取配置以相关信息
 Config.get = function(title, callback) {
 	var query = {};
 	if (title) {
@@ -54,4 +54,26 @@ Config.get = function(title, callback) {
 		}
 		callback(null, result)
 	})
+}
+
+// 通过标题，修改配置以及相关信息
+Config.modify = function(title, data, callback) {
+  var updateStr = {$set: data};
+
+  mongodb.update({title: title}, updateStr, 'config', function (err, result) {
+    if (err) {
+      return callback(err)
+    }
+    callback(null, result[0])
+  })
+}
+
+// 通过标题，删除配置项
+Config.delete = function (title, callback) {
+  mongodb.remove({title, title}, 'config', function (err, result) {
+    if (err) {
+      return callback(err)
+    }
+    callback(null, result[0])
+  })
 }
