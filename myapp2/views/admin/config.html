@@ -132,7 +132,6 @@ function getConfig() {
 
 // 更新数据
 function updateConfig(title) {
-	$(".update-config").show();
 	$.ajax({
 		type: 'GET',
 		url: '/config/updateConfig?title='+title,

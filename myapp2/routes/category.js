@@ -50,4 +50,45 @@ router.post('/createCategory', function(req, res, next) {
 
 })
 
+router.post('/removeCate', function (req, res, next) {
+	var name = req.body.name;
+
+	category.remove(name, function (err, cate) {
+		if (err) {
+			res.send({
+					code: 2,
+	  			msg: '系统出错！'
+				})
+				return
+		}
+		if (cate) {
+			res.send({
+				code: 0,
+				msg: '删除成功！'
+			})
+		}
+	})
+})
+
+router.get('/updateCate', function (req, res, next) {
+	var name = req.query.name;
+
+	category.get(name, function(err, cate) {
+		res.send({
+			code: 0,
+			data: cate[0],
+			msg: '查询成功！'
+		})
+	})
+	
+})
+
+router.post('/updateCate', function (req, res, next) {
+	var order = req.body.order,
+			name = req.body.name,
+			alias = req.body.alias,
+			url = req.body.url;
+
+	
+})
 module.exports = router;

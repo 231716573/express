@@ -52,3 +52,18 @@ Category.get = function(name, callback) {
     callback(null, result)
   })
 } 
+
+
+Category.remove = function(name, callback) {
+	var query = {};
+	if (name) {
+		query.name = name;
+	}
+
+	mongodb.remove(query, 'category', function(err, result) {
+		if (err) {
+			return callback(err)
+		}
+		callback(null, result)
+	})
+}
