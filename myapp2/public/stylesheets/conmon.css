@@ -1,0 +1,69 @@
+body,h1,h2,h3,h4,h5,h6,hr,p,blockquote,dl,dt,dd,ul,ol,li,pre,figcaption,figure,fieldset,legend,button,input,textarea,th,td{margin:0;padding:0}
+h1{font-size:18px;font-weight:normal}
+h2{font-size:16px;font-weight:normal}
+h3{font-size:14px;font-weight:normal}
+h4,h5,h6{font-size:100%;font-weight:normal}
+ul,ol,li{list-style:none;margin: 0;padding: 0;}
+a{text-decoration:none; cursor: pointer; font-size: 14px;}
+abbr[title],acronym[title]{border-bottom:1px dotted;cursor:help}
+q:before,q:after{content:''}
+legend{color:#000}
+fieldset,img{border:0}
+label,.choiceClassUl li,.phonelist li,.contact-div-right1 p,.contact-div-right1 ul li,.phoneflag p,.phoneflag ul li,#appDateTime { cursor: pointer; }
+table{border-collapse:collapse;border-spacing:0}
+hr{border:0;height:1px}
+i,em { font-style: normal; }
+strong { font-weight: normal; }
+*{
+	-ms-word-break:break-all;
+	word-break:break-all;
+	-ms-word-wrap:break-word;
+	word-wrap:break-word;
+	-webkit-tap-highlight-color:rgba(0,0,0,0);
+	-webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+html {
+    font-family: 'sans-serif',"微软雅黑", "Microsoft YaHei",  "Tahoma", "Helvetica";
+    font-size: 12px;
+    background: #fff left top repeat-y;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+	height: 100%;
+	min-width: 320px;
+	overflow-x: hidden;
+	background-color: #f5f5f5;
+}
+a { color: #404040; }
+a:visited { color: #337ab7; }
+a:hover { color:#ba2636; }
+.clear { clear: both; width:100%;height:2px; }
+
+header { width:100%; height: 102px; background: #87d3d2; }
+.bottom-box-shadow { box-shadow: 0 3px 5px rgba(0,0,0,0.2); }
+.weather { background: url(/images/weather_bg.jpg) no-repeat; height: 88px; margin: 20px 0;padding: 0px 0 0 25px; }
+
+/*头部*/
+.header { max-width: 1120px; height:100%; margin:0 auto; position: relative; }
+.header h1 { height: 102px; margin: 0;display: table; }
+.header h1 a { padding: 0; display: table-cell; position: relative; vertical-align: middle;text-align: center; }
+.header .topnav { position: absolute; right: 0px; bottom: 5px; }
+.header .topnav a { display: inline-block; margin-left: 10px; color: #252525; line-height: 14px;font-weight: 700; font-style: normal; margin: 0 5px; padding: 6px 12px; }
+.header .topnav a span:first-child { z-index: 2;display: block; text-align: center; }
+.header .topnav a span:last-child { z-index: 1;display: block;color: #999;font: 12px Georgia, serif;opacity: 0;-webkit-transition: -webkit-transform 0.3s, opacity 0.3s;-moz-transition: -moz-transform 0.3s, opacity 0.3s;transition: transform 0.3s, opacity 0.3s;-webkit-transform: translateY(-100%);transform: translateY(-100%);text-align: center; }
+.header .topnav a:hover span:last-child, .topnav a:focus span:last-child { opacity: 1; -webkit-transform: translateY(0%); -moz-transform: translateY(0%); transform: translateY(0%); }
+
+/*底部*/
+.footer { width:100%; background-color:#87d3d2;  }
+.footer .footer-title { font-size: 14px; max-width: 1120px; padding:20px 0px; margin:0px auto; text-align: center; color: #fff; }
+
+/*右侧栏目*/
+.column { float: right; width:250px; }
+.ep-title { background: #fafafa; margin: 30px 0px; padding: 0 10px; }
+.ep-title .title { font: bold 14px/36px "Sim sun";color: #404040; border-bottom: 1px solid #ccc;}
+.ep-list li { background: none; padding: 0; height: 35px; font-size: 14px; line-height: 34px; border-bottom: 1px solid #f0f0f0; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; }
+.ep-list li a:hover { text-decoration: underline; }
+.ep-list li:first-child { border-bottom: none; margin-top:8px; }
+.ep-list li:first-child a { font-size: 17px; }

@@ -36,6 +36,7 @@ router.post('/', function (req, res, next) {
     req.session.user = user;
     res.send({
     	code: 0,
+    	data: req.session,
 			msg: '登录成功！'
     })
 	})

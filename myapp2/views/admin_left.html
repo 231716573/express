@@ -56,6 +56,7 @@ a.nav-header:focus, a.nav-header:hover { color: #fff; text-decoration: none; }
 		</div>
 		<ul id="order-menu" class="nav nav-list collaspse in bg-default">
 			<li><a href="/admin/config?active=config" name="config">网站配置</a></li>
+			<li><a href="/admin/about?active=about" name="about">关于我们</a></li>
 		</ul>
 
 	</div>
@@ -83,12 +84,15 @@ function adminLeftProfile() {
 		success: function (data) {
 			// console.log(data)
 			if (data.code == 0) {
-				data.data.user_img && $('.nav-portrait img').attr('src', data.data.user_img)
-				data.data.user_realname && $('.nav-portrait h3').html(data.data.user_realname)
+				data.data.user_thunmb && $('.nav-portrait img').attr('src', '/avatar/'+data.data.user_thunmb)
+				if (data.data.user_realname) {
+					$('.nav-portrait h3').html(data.data.user_realname)
+					window.sessionStorage.setItem('user_realname', data.data.user_realname)
+				}
 				// 有性别 -> 默认头像
-				if (!data.data.user_img && data.data.user_sex == 'boy') {
+				if (!data.data.user_thunmb && data.data.user_sex == 'boy') {
 					$('.nav-portrait img').attr('src', '/images/boy-default.jpg')
-				} else if (!data.data.user_img && data.data.user_sex == 'girl') {
+				} else if (!data.data.user_thunmb && data.data.user_sex == 'girl') {
 					$('.nav-portrait img').attr('src', '/images/girl-default.jpg')
 				}
 			}

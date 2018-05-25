@@ -1,0 +1,22 @@
+body { background-color: #fff; }
+/*左侧中心*/
+.contain { width: 100%; max-width: 1120px; margin:0 auto; position: relative; margin-top: 3px; }
+
+
+
+
+/*内容*/
+.article { margin:50px 270px 20px 0px; }
+.article .art-title { font-size: 26px; margin:20px 0px;  }
+.article .art-author { padding-bottom: 20px; box-shadow:0px 15px 10px -15px #000; }
+.article .art-author .art-author-span1 { color: #aaa; margin-right: 10px; }
+.article .art_description { font-size: 16px; line-height: 1.6; padding:15px; background-color: #eee; margin:20px 0px; border-radius: 5px; }
+.article .art-content { border-radius: 5px; padding:10px; }
+.article .art-keyword { margin:0px 10px; font-size: 14px; }
+.article .art-keyword span { font-weight: bold; }
+.article .nextinfo { margin:20px 10px; font-size: 16px; }
+.article .nextinfo a { color:#000; font-size: 16px; }
+.article .nextinfo a:hover { text-decoration: underline; }
+.article .nextinfo p:first-child { float: right; margin-right: 20px; }
+.article .bg-parent { margin:0px 10px 10px; }
+.article .bg-parent .bg {display: inline-block;width: 100%; height: 12px; background: url(/images/rec.png) repeat-x; }

@@ -1,0 +1,59 @@
+<%- include head.html %>
+
+<link rel="stylesheet" href="/stylesheets/articlelist.css">
+<style type="text/css">
+.contain { padding: 50px; background-color: #fff; font-size: 16px;}
+.piclist .pic-view {
+	position: relative;
+  float: left;
+  width: 23%;
+  margin-right: 2%;
+  margin-bottom: 20px;
+  height: 250px;
+  overflow: hidden;
+  box-shadow: 0px 0px 3px #000;
+  opacity: 0.7;
+  border-radius: 3px;
+  text-align: center;
+  background-color: #fff;
+  -webkit-transition: opacity .15s ease-out, box-shadow .15s ease-out;
+  transition: opacity .15s ease-out, box-shadow .15s ease-out;
+}
+.piclist .pic-view:hover { opacity:1; box-shadow:0px 0px 10px #000; }
+.piclist .pic-view img { max-width: 100%; height: auto; margin: 30px 0 5px; padding:0 5px; box-sizing: border-box; }
+.piclist .pic-view .pic-title { width: 100%; box-sizing: border-box; font-size: 14px; position: absolute; top: 0; padding:5px 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: left; color: #000; }
+.clear-both {clear: both; width: 100%; height: 2px;}
+</style>
+
+<div class="contain">
+	<div class='piclist'>
+		<p class="clear-both"></p>
+	</div>
+</div>
+
+<script type="text/javascript">
+$(function () {
+	getPic()
+})
+
+function getPic() {
+	$.ajax({
+		url: '/picture/getPic',
+		type: 'get',
+		success: function(data) {
+			console.log(data)
+			if (data.code == 0) {
+				var newDiv = '';
+				for (var i = 0; i < data.data.length; i++) {
+					newDiv += '<a href="'+data.data[i]._id+'"><div class="pic-view"><img src="/picture/'+data.data[i].thunmb+'" alt="'+data.data[i].title+'"><p class="pic-title">'+data.data[i].title+'</p></div></a>';
+				}
+
+				$(".piclist p").before(newDiv);
+			}
+
+		}
+	})
+}
+</script>
+
+<%- include footer.html %>

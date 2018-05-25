@@ -1,0 +1,272 @@
+<%- include ../header.html %>
+
+<%- include ../admin_left.html %>
+<link rel="stylesheet" href="/stylesheets/admin-common.css">
+<style>
+a.thumbnail:hover { text-decoration: none; }
+a.thumbnail span { margin-top: 10px; display: inline-block; }
+a.thumbnail p { width: 160px; margin: 0 auto; height: 160px; text-align: center; overflow: hidden; position: relative; }
+a.thumbnail p i { position: absolute; right: 5px; bottom: 0; font-style: normal; color:#ccc; font-size: 20px; }
+textarea.form-control { height: 100px; }
+.pic-view { position: relative; }
+.pic-view .pic-active { position: absolute; top: 0; right: 15px; z-index: 99; padding: 5px; text-align: right; box-sizing: border-box;}
+.pic-view .pic-active .delect,.pic-view .pic-active .edit { margin-bottom: 10px; width: 20px; display: block; cursor: pointer; }
+.pic-view .pic-active .delect img,.pic-view .pic-active .edit img { width: 100%; }
+</style>
+
+<div class="col-xs-12 col-sm-9 col-md-10 container">
+	<h3 class="form-group">相册列表<smal class="pull-right"><a href="javascript:void(0);"  class="btn btn-primary btn-create-newconfig">添加相册</a></smal></h3>
+	<hr />
+	<div class="row new-picture-view">
+	  
+	</div>
+	<!-- 添加相册 -->
+	<div class="create-config" style="display: none;">
+		<div class="create-config-bg"></div>
+		<div class="create-config-wrapper" style="top: 10%;">
+			<h3>添加相册</h3>
+			<form class="form-horizontal" style="margin: 0 20px 0 0;" method="post" enctype="multipart/form-data" id="createUploadFile">
+				<div class="form-group form-group-xl">
+			    <label class="col-sm-2 control-label" for="create_title">标题</label>
+			    <div class="col-sm-10">
+			      <input class="form-control" type="text" name="create_title" placeholder="请输入标题">
+			    </div>
+				</div>
+				<div class="form-group form-group-xl">
+			    <label class="col-sm-2 control-label" for="create_thump">封面图</label>
+			    <div class="col-sm-10">
+			      <p><img src="/images/logo.png" class="create_img"  style="max-width: 100px;"></p>
+						<input type="file" multiple="true" name="imageFile" accept="image/*" onchange="uploadByForm(this);">
+			    </div>
+				</div>
+				<div class="form-group form-group-xl">
+			    <label class="col-sm-2 control-label" for="create_con">备注</label>
+			    <div class="col-sm-10">
+			      <textarea class="form-control" type="text" name="create_con" placeholder="请输入备注"></textarea>
+			    </div>
+				</div>
+				<div class="form-group form-group-xl">
+			    <label class="col-sm-2 control-label"></label>
+			    <div class="col-sm-10">
+			      <button type="submit" class="btn btn-primary" style="margin-right: 20px;" onclick="createSubmit(this)">提交</button>
+			      <button type="button" class="btn btn-info create_back">返回</button>
+			    </div>
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<!-- 修改相册 -->
+	<div class="update-config" style="display: none;">
+		<div class="create-config-bg"></div>
+		<div class="create-config-wrapper" style="top: 10%;">
+			<h3>修改相册</h3>
+			<form class="form-horizontal" style="margin: 0 20px 0 0;" method="post" enctype="multipart/form-data" id="updateUploadFile">
+				<input type="hidden" name="update_id">
+				<div class="form-group form-group-xl">
+			    <label class="col-sm-2 control-label" for="update_title">标题</label>
+			    <div class="col-sm-10">
+			      <input class="form-control" type="text" name="update_title" placeholder="请输入标题">
+			    </div>
+				</div>
+				<div class="form-group form-group-xl">
+			    <label class="col-sm-2 control-label" for="update_thump">封面图</label>
+			    <div class="col-sm-10">
+			      <p><img src="/images/logo.png" class="update_img"  style="max-width: 100px;"></p>
+						<input type="file" multiple="true" name="imageFile" accept="image/*" onchange="uploadByFormUpdate(this);">
+			    </div>
+				</div>
+				<div class="form-group form-group-xl">
+			    <label class="col-sm-2 control-label" for="update_con">备注</label>
+			    <div class="col-sm-10">
+			      <textarea class="form-control" type="text" name="update_con" placeholder="请输入备注"></textarea>
+			    </div>
+				</div>
+				<div class="form-group form-group-xl">
+			    <label class="col-sm-2 control-label"></label>
+			    <div class="col-sm-10">
+			      <button type="submit" class="btn btn-primary" style="margin-right: 20px;" onclick="updateSubmit(this)">提交</button>
+			      <button type="button" class="btn btn-info create_back">返回</button>
+			    </div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+$(function () {
+	getPicture();
+
+	$('.btn-create-newconfig').click(function () {
+		$('.create-config').show()
+	})
+	$('.create_back, .update_back').click(function () {
+		$('.create-config').fadeOut()
+		$('.update-config').fadeOut()
+	})
+})
+
+function uploadByForm(obj) {
+  if ($(obj)[0].files[0]) {
+  	$(".create_img")[0].src = window.URL.createObjectURL($(obj)[0].files[0]);
+  }
+}
+
+function uploadByFormUpdate(obj) {
+  if ($(obj)[0].files[0]) {
+  	$(".update_img")[0].src = window.URL.createObjectURL($(obj)[0].files[0]);
+  }
+}
+
+function turnTime(_time) {
+	var timestamp = _time;
+	var newDate = new Date();
+	newDate.setTime(timestamp * 1000);
+
+	return newDate.toLocaleString()
+}
+
+
+function layerCode(code, msg, obj) {
+	var layerIcon = code == 0 ? 1 : 2
+	layer.msg(msg, {
+	  icon: layerIcon,
+	  time: 2000 //2秒关闭（如果不配置，默认是3秒）
+	}, function(){
+
+		if (layerIcon == 1) {
+			window.location.reload()
+		} else {
+			if (obj) {
+				$(obj).removeAttr('disabled')
+			}
+		}
+		
+	}); 
+}
+
+function delectPic(_id) {
+	
+	layer.confirm('是否确定删除此相册？', {icon: 7, title:'警告！'}, function(index){
+		$.ajax({
+			type: 'POST',
+			url: '/picture/removePic',
+			data: {_id: _id},
+			dataType: 'json',
+			success: function (data) {
+				// console.log(data)
+				layerCode(data.code, data.msg)
+			}
+		})
+	  layer.close(index);
+	});
+}
+
+function getPicture() {
+	$.ajax({
+		type: 'GET',
+		url: '/picture/getPic',
+		success: function (data) {
+			// console.log(data)
+
+			if (data.code == 0) {
+				var picData = '';
+				for (var i = 0; i < data.data.length; i++) {
+					if (data.data[i].thunmb) {
+						// console.log(data.data[i].thunmb.replace(/^\d+\_(.*)/, '$1'))
+						var createImg = '/picture/' + data.data[i].thunmb;
+					} else {
+						var createImg = '/images/fc160.gif';
+					}
+
+					picData += '<div class="col-xs-6 col-md-3 pic-view"><div class="pic-active"><span class="delect" onclick="delectPic(\''+data.data[i]._id+'\')"><img src="/images/delete.png" title="删除"/></span><span class="edit" onclick="editPic(\''+data.data[i]._id+'\')"><img src="/images/edit.png" title="修改"/></span></div><a href="#" _id="'+data.data[i]._id+'" class="thumbnail"><p><img src="'+createImg+'" ><i>0</i></p><span>'+data.data[i].title+'</span></a></div>';
+				}
+				$('.new-picture-view').append(picData)
+			}
+		}
+	})
+}
+
+function editPic(_id) {
+	$.ajax({
+		type: 'GET',
+		url: '/picture/editPic?_id='+_id,
+		success: function (data) {
+			// console.log(data)
+			if (data.code == 0) {
+				$('.update-config').show()
+				$('input[name=update_id]').val(data.data._id)
+				$('input[name=update_title]').val(data.data.title)
+				$('textarea[name=update_con]').val(data.data.content)
+				data.data.thunmb && $('.update_img').attr('src', '/picture/'+data.data.thunmb)
+			} else {
+				layer.msg('系统出错，请稍后再试！')
+			}
+		}
+	})
+}
+
+function updateSubmit(obj) {
+	$(obj).attr('disabled', 'disabled')
+
+	var createTitle = $("input[name=update_title]").val()
+
+	// 创建一个FormData
+	var formData = new FormData($("#updateUploadFile")[0])
+
+	$.ajax({
+		type: 'POST',
+		url: '/picture/editPic',
+		data: formData,
+		async: false,
+    cache: false,
+    contentType: false,
+    processData: false,
+		success: function(data) {
+			layerCode(data.code, data.msg, obj);
+		}
+	})
+}
+
+function createSubmit(obj) {
+	$(obj).attr('disabled', 'disabled')
+
+	var createTitle = $("input[name=create_title]").val()
+
+	// 创建一个FormData
+	var formData = new FormData($("#createUploadFile")[0])
+
+	$.ajax({
+		type: 'POST',
+		url: '/picture/createpic',
+		data: formData,
+		async: false,
+    cache: false,
+    contentType: false,
+    processData: false,
+		success: function(data) {
+			console.log(data)
+			var layerIcon = data.code == 0 ? 1 : 2
+			layer.msg(data.msg, {
+			  icon: layerIcon,
+			  time: 2000 //2秒关闭（如果不配置，默认是3秒）
+			}, function(){
+				if (layerIcon == 1) {
+					var createImg = /\/images\/logo\.png/.test($(".create_img")[0].src) ? '/images/fc160.gif' : $(".create_img")[0].src
+
+					// console.log($(".create_img")[0].src)
+					$('.new-picture-view').append('<div class="col-xs-6 col-md-3"><a href="#" _id="'+data.data._id+'" class="thumbnail"><p><img src="'+createImg+'" ><i>0</i></p><span>'+createTitle+'</span></a></div>');
+
+					$('.create-config').fadeOut()
+
+				}
+				$(obj).removeAttr('disabled')
+			}); 
+		}
+	})
+}
+
+
+</script>
+<%- include ../footer.html %>

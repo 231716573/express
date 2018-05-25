@@ -1,0 +1,75 @@
+<%- include head.html %>
+<link rel="stylesheet" href="/stylesheets/article.css">
+<style type="text/css">
+.art-content { margin:25px 0; }
+</style>
+
+<input type="hidden" name="diaryId" value="<%= diary._id %>">
+<div class="contain">
+  <div class="column">
+    <div class="weather"><iframe allowtransparency="true" frameborder="0" width="250" height="75" scrolling="no" src="//tianqi.2345.com/plugin/widget/index.htm?s=2&z=1&t=0&v=0&d=1&bd=0&k=&f=&ltf=009944&htf=cc0000&q=1&e=1&a=1&c=59287&w=250&h=75&align=center"></iframe></div>
+  </div>
+  <div class="article">
+    <div class="art-cate">
+      您当前的位置：<a href="/">首页</a>&nbsp;-&gt;&nbsp;<a href="/diary">日记</a>&nbsp;-&gt;&nbsp;<a href="javascript:void(0)"><%= diary.title %></a>
+    </div>
+    <h2 class="art-title"><%= diary.title %></h2>
+    <div class="art-author">
+      <span class="art-author-span1" style="float: right; padding-right: 10px;">浏览量：<%= diary.clicked %></span>
+      <span class="art-author-span1" id="diary-time"><%= diary.update_time %></span>
+      <span class="art-author-span2">作者：<%= diary.realname %></span>
+
+    </div>
+    <div class="art-content" style="font-size: 16px; line-height: 32px;">
+    	<div style="text-align: center; margin-bottom: 20px;"><img src="/diary/<%= diary.thunmb %>" alt=""></div>
+    	<div id="new-diary"><%= diary.content %></div>
+    </div>
+    <div class="bg-parent"><span class="bg"></span></div>
+    <div class="art-keyword"><span>心情</span>：<%= diary.description %></div>
+    <div class="nextinfo">
+        <p>下一篇：
+	        <% if(next.title){ %>
+	          <a href="/diaryDetail/<%= next._id %>"><%= next.title %></a>
+					<% }else{ %>
+	          <span>没有了</span>
+	        <% } %>
+        </p>
+        <p>上一篇：
+        	<% if(prev.title){ %>
+        		<a href="/diaryDetail/<%= prev._id %>"><%= prev.title %></a>
+        	<% }else{ %>
+          	<span>没有了</span>
+          <% } %>
+        </p>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+var Utils = {}
+// textArea换行符转<br/>
+Utils.encodeTextAreaString= function(str) {
+    var reg = new RegExp("\n", "g");
+    str = str.replace(reg, "<br/>");
+    return str;
+}
+
+
+$(function () {
+	$("#new-diary").html(Utils.encodeTextAreaString($("#new-diary").html()))
+	$("#diary-time").html(turnTime($("#diary-time").html()))
+
+	$.ajax({
+		type: 'POST',
+		url: '/diary/updateDiaryClicked',
+		data: {update_id: $('input[name=diaryId]').val()},
+		dataType: 'JSON',
+		success: function (data) {
+			console.log(data)
+		}
+	})
+
+})
+</script>
+
+<%- include footer.html %>

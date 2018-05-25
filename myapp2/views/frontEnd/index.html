@@ -1,0 +1,141 @@
+<%- include head.html %>
+
+<link rel="stylesheet" href="/stylesheets/index.css">
+
+<div class="contain">
+  <div class="banner">
+    <div class="banner-con">
+      <img src="/images/girl1.png" alt="" class="banner-img1">
+      <div>
+        <img src="/images/text1.png" alt="ABC" class="banner-img2">
+      </div>
+    </div>
+  </div>
+  <div class="action_box_inner action_box-inner">
+    <div class="action_box_content action_box-content">
+      <div class="ac-content-text action_box-text" id="well-known">
+        <h2 class="text action_box-title"></h2>
+        <h5></h5>
+      </div>
+    </div>
+  </div>
+
+  <!-- 回忆 -->
+  <div class="section" id="web_ssnh">
+    <h2></h2>
+    <div class="region"></div>
+    <div class="recallphoto">
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+  </div>
+  <div class="xian">
+    <img src="/images/xian1.png" alt="">
+  </div>
+  <!-- 类别 -->
+  <div class="section" id="web_xqqw">
+    <h2></h2>
+    <div class="region"></div>
+    <div class="recalltype"></div>
+  </div>
+  <div class="xian">
+    <img src="/images/xian2.png" alt="">
+  </div>
+  <div class="section-title">
+    <div class="section-desc" id="web_dddd">
+      <h3></h3>
+      <p></p>
+    </div>
+  </div>
+  <div class="section">
+    <div class="recallnote" id="article"></div>
+  </div>
+</div>
+
+
+<script type="text/javascript">
+$(function () {
+	getCate()
+	getArticle()
+
+  $(".banner .banner-con").css({
+      'width' : $(window).width() + 'px',
+      'height' : $(".banner .banner-con").width()/3 + "px"
+  })
+  $(".section .recallphoto").css({
+      'width' : '100%',
+      'height' : $(".section .recallphoto").width()/5 + "px"
+  })
+  $(".section .recallphoto div").css({
+      'width' : '25%',
+      'height' : $(".section .recallphoto div").width()*3/4 + "px"
+  })
+  $(".recallnote div a").css({
+      'height' : $(".recallnote div a").width()*2.5/4 + "px"
+  })
+  $(window).resize(function(){
+      $(".banner .banner-con").css({
+          'width' : $(window).width() + 'px',
+          'height' : $(".banner .banner-con").width()/3 + "px"
+      })
+      $(".section .recallphoto").css({
+          'width' : '100%',
+          'height' : $(".section .recallphoto").width()/5 + "px"
+      })
+      $(".section .recallphoto div").css({
+          'width' : '25%',
+          'height' : $(".section .recallphoto div").width()*3/4 + "px"
+      })
+      $(".recallnote div a").css({
+          'height' : $(".recallnote div a").width()*2.5/4 + "px"
+      })
+  });
+
+  $(".banner .banner-con div").css({
+      'margin-top' : '-' + $(".banner .banner-con .banner-img2").height()/1.5 + "px"
+  })
+})
+
+function getCate() {
+	$.ajax({
+		type: 'GET',
+		url: '/category/getCategory',
+		success: function (data) {
+			// console.log(data);
+			if (data.code == 0) {
+				var newNav = '';
+				for (var i = 0; i < data.data.length; i++) {
+					newNav += '<div><img src="/category/thunmb'+i+'.jpg"><h3>'+data.data[i].name+'</h3><p>'+data.data[i].description+'</p><a href="'+data.data[i]._id+'">详情+</a></div>'
+				}
+				$('#web_xqqw .recalltype').append(newNav)
+			}
+		}
+	})
+}
+
+function getArticle() {
+	$.ajax({
+		type: 'GET',
+		url: '/adminArticle/getArticle?limit=9',
+		success: function (data) {
+			console.log(data);
+
+			if (data.code == 0) {
+				var newArt = '';
+				for (var i = 0; i < data.data.length; i++) {
+          var thumb = data.data[i].thumb ? '/article/'+data.data[i].thumb : '/images/timg-diary.jpg';
+
+					newArt += '<div><a href="/article/'+data.data[i]._id+'" target="_blank" title="'+data.data[i].title+'"><img src="'+thumb+'" style="width: auto; max-width:100%;"><span>阅读详情+</span></a><em class="">'+turnTime(data.data[i].update_time)+' By author：<i href="">'+data.data[i].author_realname+'</i></em><p>'+data.data[i].title+'</p></div>'
+				}
+				$("#article").append(newArt)
+			}
+		}
+	})
+}
+
+
+</script>
+
+<%- include footer.html %>

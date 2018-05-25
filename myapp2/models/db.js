@@ -33,16 +33,21 @@ Db.prototype.insert = function(data, col, cb) {
 }
 
 // 查询
-Db.prototype.find = function(data, col, cb) {
+Db.prototype.find = function(data, col, cb, sortData, sortType) {
 	var selectData = function (db, callback) {
 		// 连接到表
 		var collection = db.collection(col);
 		// 查询数据
-		// var whereStr = {"name":'源宝教程'};
 		var whereStr = data;
-		collection.find(whereStr).sort({
-			time: -1
-		}).toArray(function (err, result) {
+
+		if (sortData) {
+			var stringJson ='{"'+ sortData +'": '+ sortType +'}';
+			var json = JSON.parse(stringJson);
+		} else {
+			var json = {}
+		}
+
+		collection.find(whereStr).sort(json).toArray(function (err, result) {
 			if (err) {
 				return cb(err)
 			}
@@ -52,6 +57,41 @@ Db.prototype.find = function(data, col, cb) {
 
 	MongoClient.connect(this.url, function (err, db) {
 		console.log('mongodb->find 连接成功');
+		selectData(db, function (newerr, result) {
+			db.close();
+			cb(null, result)
+		})
+	})
+}
+
+// 分页 -> xx条一页
+Db.prototype.findPage = function (data, col, cb, limitData, skipData, sortData, sortType) {
+	var selectData = function(db, callback) {
+		// 连接到表
+		var collection = db.collection(col);
+		// 查询数据
+		var whereStr = data;
+
+		if (sortData) {
+			var stringJson ='{"'+ sortData +'": '+ sortType +'}';
+			var json = JSON.parse(stringJson);
+		} else {
+			var json = {}
+		}
+
+		console.log('limitData:'+limitData)
+		console.log('skipData:'+skipData)
+
+		collection.find(whereStr).sort(json).limit(limitData).skip(skipData).toArray(function (err, result) {
+			if (err) {
+				return cb(err)
+			}
+			callback(null, result)
+		})
+	}
+
+	MongoClient.connect(this.url, function (err, db) {
+		console.log('mongodb->findPage 连接成功')
 		selectData(db, function (newerr, result) {
 			db.close();
 			cb(null, result)
@@ -71,13 +111,13 @@ Db.prototype.update = function (data, updateData, col, cb) {
 		var whereStr = data;
 		// var updateStr = {$set: { "url": "https://www.ybao.org" }};
 		var updateStr = updateData;
-		
+
 		collection.update(whereStr, updateStr, function (err, result) {
 			if (err) {
 				console.log('Error:' + err)
 				return cb(err)
 			}
-			callback(null, result)
+			callback(null, whereStr)
 		})
 	}
 

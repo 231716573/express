@@ -8,6 +8,7 @@ input[type=radio] { vertical-align: bottom; margin-bottom: 3px; }
 .uploadify { display: inline-block; }
 .uploadify-button { border: none; border-radius: 5px; margin-top: 5px; }
 #user_thumb_img { max-width: 20px; height: auto; display: block; }
+#fileSubmit { margin-top: 10px; padding: 1px 3px; display: inline-block; display: none; }
 </style>
 <div class="container">
 	<div class="row">
@@ -18,7 +19,7 @@ input[type=radio] { vertical-align: bottom; margin-bottom: 3px; }
 				<!-- 主体 -->
 				<div class="panel-body">
 					
-					<div class="form-horizontal">
+					<form class="form-horizontal" method="post" enctype="multipart/form-data" id="frmUploadFile">
 						<!-- 个人邮箱 -->
 						<div class="form-group">
 							<label for="user_name" class="col-sm-2 control-label">账号</label>
@@ -30,9 +31,8 @@ input[type=radio] { vertical-align: bottom; margin-bottom: 3px; }
 						<div class="form-group">
 							<label for="user_thunmb" class="col-sm-2 control-label">头像</label>
 							<div class="col-sm-10">
-								<input type="text" class="form-control" name="user_thunmb" placeholder="请上传个人头像" style="display: none;">
-								<img src="/images/logo.png" id="user_thunb_img">
-								<input type="file" id="file_upload" multiple="true">
+								<p><img src="/images/logo.png" id="user_thunb_img" style="max-width: 200px;"></p>
+								<input type="file" id="file_upload" multiple="true" name="imageFile" accept="image/*" onchange="uploadByForm(this);" style="margin-top: 10px;display: inline-block;">
 							</div>
 						</div>
 						<!-- 个人邮箱 -->
@@ -71,7 +71,7 @@ input[type=radio] { vertical-align: bottom; margin-bottom: 3px; }
 								<p style="color: red;"></p>
 							</div>
 						</div>
-					</div>
+					</form>
 
 				</div>
 			</div>
@@ -90,7 +90,7 @@ function getProfile() {
 		success: function (data) {
 			// console.log(data)
 			if (data.code == 0) {
-				data.data.user_img && $('#user_thunb_img').attr('src', data.data.user_img)
+				data.data.user_thunmb && $('#user_thunb_img').attr('src', '/avatar/'+data.data.user_thunmb)
 				data.data.name && $('input[name=user_name]').val(data.data.name)
 				data.data.user_email && $('input[name=user_email]').val(data.data.user_email)
 				data.data.user_realname && $('input[name=user_realname]').val(data.data.user_realname)
@@ -98,9 +98,9 @@ function getProfile() {
 					data.data.user_sex == 'boy' ? $("#boy").attr('checked', 'checked') : $("#girl").attr('checked', 'checked')
 				}
 				// 有性别 -> 默认头像
-				if (!data.data.user_img && data.data.user_sex == 'boy') {
+				if (!data.data.user_thunmb && data.data.user_sex == 'boy') {
 					$('#user_thunb_img').attr('src', '/images/boy-default.jpg')
-				} else if (!data.data.user_img && data.data.user_sex == 'girl') {
+				} else if (!data.data.user_thunmb && data.data.user_sex == 'girl') {
 					$('#user_thunb_img').attr('src', '/images/girl-default.jpg')
 				}
 			}
@@ -109,22 +109,28 @@ function getProfile() {
 	})
 }
 
+function uploadByForm(obj) {
+  $("#user_thunb_img")[0].src = window.URL.createObjectURL($(obj)[0].files[0]);
+}
+
+
+
 function postProfile(obj) {
 	$(obj).attr("disabled", "disabled")
 
-	var data = {
-		user_email: $('input[name=user_email]').val(),
-		user_realname: $('input[name=user_realname]').val(),
-		user_sex: $('input[name=user_sex]:checked').val()
-	}
+	//创建一个FormData
+  var formData=new FormData($("#frmUploadFile")[0]);
 
 	$.ajax({
 		type: "POST",
-		data: data,
-		dataType: 'json',
+		data: formData,
+		async: false,
+    cache: false,
+    contentType: false,
+    processData: false,
 		url: '/admin/profile/user',
 		success: function (data) {
-			console.log(data)
+			// console.log(data)
 			var layerIcon = data.code == 0 ? 1 : 2
 			layer.msg(data.msg, {
 			  icon: layerIcon,

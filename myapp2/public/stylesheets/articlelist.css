@@ -1,0 +1,31 @@
+
+.contain { width: 100%; max-width: 1120px; margin:0 auto; position: relative; margin-top: 3px; }
+
+.submenu { width: 250px; margin: 20px 0; overflow: hidden }
+.submenu li { width: 120px; text-align: center; display: inline-block; margin-bottom: 10px; margin-right: 10px; float: left; height: 40px; line-height: 40px }
+.submenu li a { color: #FFF; display: block; -webkit-transition: all 1s; -moz-transition: all 1s; -o-transition: all 1s; transition: all 1s }
+.submenu1 { background: #FE5187 }
+.submenu2 { background: #339967; margin-right: 0 !important; }
+.submenu3 { background: #FF8151; }
+.submenu4 { background: #66CC9A; margin-right: 0 !important; }
+
+/*内容*/
+.article { margin:50px 270px 20px 0px; }
+.art-list { margin-top: 30px; }
+.art-list li { border-radius: 5px; -webkit-border-radius: 5px; background-color: #fff; margin-bottom: 20px; }
+.art-list li .art-list-img { display: block; max-width: 230px; }
+.art-list li .art-list-img img { width: 100%; height: auto; }
+.art-list li h3 { line-height: 1.6;padding: 15px 0 0; margin: 0 0 10px;}
+.art-list li h3 a { color: #000; font-size: 16px; }
+.art-list li h3 a:hover { color:#ba2636; text-decoration: underline; }
+.art-list .art-list-con { padding:0px 25px; }
+.art-list .art-list-con div { font-size: 13px; color: #9a9a9a; text-transform: uppercase; padding: 10px 0 10px; position: relative; -webkit-transition: opacity 150ms ease-in;transition: opacity 150ms ease-in;}
+.art-list .art-list-con p { font-size: 13px; color: #535353; padding: 0 0 15px; margin: 0 0 15px; border-bottom: 1px solid #F5F5F5; }
+.art-list .art-list-link { padding:0 25px 15px; color:#000; font-size: 14px; }
+
+.ep-title { background: #fafafa; margin: 30px 0px; padding: 0 10px; }
+.ep-title .title { font: bold 14px/36px "Sim sun";color: #404040; border-bottom: 1px solid #ccc;}
+.ep-list li { background: none; padding: 0; height: 35px; font-size: 14px; line-height: 34px; border-bottom: 1px solid #f0f0f0; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; }
+.ep-list li a:hover { text-decoration: underline; }
+.ep-list li:first-child { border-bottom: none; margin-top:8px; }
+.ep-list li:first-child a { font-size: 17px; }

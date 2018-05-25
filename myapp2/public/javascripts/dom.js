@@ -19,3 +19,16 @@ function getTime(){
 
   return time
 }
+
+
+// 时间戳转日期格式
+function turnTime(str) {
+  var date = new Date(str * 1000);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+  Y = date.getFullYear() + '-';
+  M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+  D = (date.getDate() < 10 ? '0'+date.getDate() : date.getDate()) + ' ';
+  h = (date.getHours() < 10 ? '0'+date.getHours() : date.getHours()) + ':';
+  m = date.getMinutes() < 10 ? '0'+date.getMinutes() : date.getMinutes();
+  s = date.getSeconds();
+  return Y+M+D+h+m;
+}

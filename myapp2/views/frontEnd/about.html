@@ -1,0 +1,26 @@
+<%- include head.html %>
+
+<link rel="stylesheet" href="/stylesheets/articlelist.css">
+<style type="text/css">
+.contain { padding: 50px; background-color: #fff; font-size: 16px;}
+.contain .title { font-size: 25px; padding-bottom: 30px; margin-bottom: 30px; border-bottom: 1px dashed #ccc; }
+</style>
+
+<div class="contain">
+  <h2 class="title"><%= data.name %></h2>
+	<div class="detail">
+		<%- data.contain %>
+	</div>
+</div>
+
+<script type="text/javascript">
+$(function () {
+	getDiary()
+})
+
+function getDiary() {
+
+}
+</script>
+
+<%- include footer.html %>

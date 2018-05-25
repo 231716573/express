@@ -105,15 +105,16 @@ function login(obj) {
 		dataType: 'json',
 		success: function(data){
 			// console.log(data)
-
 			var layerIcon = data.code == 0 ? 1 : 2
 			layer.msg(data.msg, {
 			  icon: layerIcon,
 			  time: 2000 //2秒关闭（如果不配置，默认是3秒）
 			}, function(){
 			  if (data.code === 0) {
+			  	window.sessionStorage.setItem('isLogin', $('input[name=user_name]').val())
 			  	window.location.href = '/admin'
 			  }
+			  getCode()
 			  $(obj).removeAttr("disabled")
 			}); 
 		}

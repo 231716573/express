@@ -1,11 +1,12 @@
 var Db = require('./db');
 var mongodb = new Db();
+var ObjectID = require('mongodb').ObjectID;
 
-function Category(order, name, alias, url) {
+function Category(order, name, url, description) {
 	this.order = order;
 	this.name = name;
-	this.alias = alias;
 	this.url = url;
+	this.description = description;
 }
 
 module.exports = Category;
@@ -25,8 +26,8 @@ Category.prototype.save = function(callback) {
   var cate = {
   	order: this.order,
   	name: this.name,
-  	alias: this.alias,
   	url: this.url,
+  	description: this.description,
   	create_time: time
   };
 
@@ -39,19 +40,41 @@ Category.prototype.save = function(callback) {
   
 }
 
-Category.get = function(name, callback) {
+Category.get = function(name, callback, sortData, sortType) {
   var query = {};
   if (name) {
     query.name = name
   }
+  
+  if (sortData) {
+  	mongodb.find(query, 'category', function(err, result) {
+	    if (err) {
+	      return callback(err)
+	    }
+	    callback(null, result)
+	  }, sortData, sortType)
+  } else {
+  	mongodb.find(query, 'category', function(err, result) {
+	    if (err) {
+	      return callback(err)
+	    }
+	    callback(null, result)
+	  })
+  }
 
-  mongodb.find(query, 'category', function(err, result) {
-    if (err) {
-      return callback(err)
-    }
-    callback(null, result)
-  })
 } 
+
+// 通过标题，修改分类以及相关信息
+Category.update = function(_id, data, callback) {
+	var updateStr = {$set: data};
+
+	mongodb.update({_id: ObjectID(_id)}, updateStr, 'category', function (err, result) {
+		if (err) {
+			return callback(err)
+		}
+		callback(null, result)
+	})
+}
 
 
 Category.remove = function(name, callback) {

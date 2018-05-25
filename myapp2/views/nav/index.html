@@ -1,0 +1,255 @@
+<%- include ../header.html %>
+
+<%- include ../admin_left.html %>
+<link rel="stylesheet" href="/stylesheets/admin-common.css">
+
+<div class="col-xs-12 col-sm-9 col-md-10 container">
+	<h3 class="form-group">导航列表<smal class="pull-right"><a href="javascript:void(0);"  class="btn btn-primary btn-create-newconfig">添加导航</a></smal></h3>
+	<hr />
+	<div>
+		<table class="table table-bordered">
+			<thead>
+				<tr class="info">
+					<th style="width: 80px;">排序</th>
+					<th style="width: 140px;">标题</th>
+					<th style="width: 140px;">链接</th>
+					<th style="width: 140px;">英文</th>
+					<th style="width: 120px;">操作</th>
+				</tr>
+			</thead>
+			<tbody class="config-list"></tbody>
+		</table>
+	</div>
+	<!-- 添加导航 -->
+	<div class="create-config" style="display: none;">
+		<div class="create-config-bg"></div>
+		<div class="create-config-wrapper">
+			<h3>添加导航</h3>
+			<form class="form-horizontal" style="margin: 0 20px 0 0;" method="post" enctype="multipart/form-data" id="createUploadFile">
+				<div class="form-group form-group-xl">
+			    <label class="col-sm-2 control-label" for="create_order">排序</label>
+			    <div class="col-sm-10">
+			      <input class="form-control" type="text" name="create_order" placeholder="请输入排序">
+			    </div>
+				</div>
+				<div class="form-group form-group-xl">
+			    <label class="col-sm-2 control-label" for="create_name">标题</label>
+			    <div class="col-sm-10">
+			      <input class="form-control" type="text" name="create_name" placeholder="请输入标题">
+			    </div>
+				</div>
+				<div class="form-group form-group-xl">
+			    <label class="col-sm-2 control-label" for="create_alias">英文</label>
+			    <div class="col-sm-10">
+			      <input class="form-control" type="text" name="create_alias" placeholder="请输入英文">
+			    </div>
+				</div>
+				<div class="form-group form-group-xl">
+			    <label class="col-sm-2 control-label" for="create_url">链接</label>
+			    <div class="col-sm-10">
+			      <input class="form-control" type="text" name="create_url" placeholder="请输入链接">
+			    </div>
+				</div>
+				<div class="form-group form-group-xl">
+			    <label class="col-sm-2 control-label" for="create_thump">缩略图</label>
+			    <div class="col-sm-10">
+			      <p><img src="/images/logo.png" id="user_thunb_img" style="max-width: 100px;"></p>
+						<input type="file" id="file_upload" multiple="true" name="imageFile" accept="image/*" onchange="uploadByForm(this);">
+			    </div>
+				</div>
+				<div class="form-group form-group-xl">
+			    <label class="col-sm-2 control-label"></label>
+			    <div class="col-sm-10">
+			      <button type="submit" class="btn btn-primary" style="margin-right: 20px;" onclick="createSubmit(this)">提交</button>
+			      <button type="button" class="btn btn-info create_back">返回</button>
+			    </div>
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<!-- 修改导航 -->
+	<div class="update-config" style="display: none;">
+		<div class="create-config-bg"></div>
+		<div class="create-config-wrapper">
+			<h3>修改导航</h3>
+			<form class="form-horizontal" style="margin: 0 20px 0 0;" method="post" enctype="multipart/form-data" id="updateUploadFile">
+				<input type="hidden" name="update_id" readonly>
+				<div class="form-group form-group-xl">
+			    <label class="col-sm-2 control-label" for="update_order">排序</label>
+			    <div class="col-sm-10">
+			      <input class="form-control" type="text" name="update_order" placeholder="请输入排序">
+			    </div>
+				</div>
+				<div class="form-group form-group-xl">
+			    <label class="col-sm-2 control-label" for="update_name">标题</label>
+			    <div class="col-sm-10">
+			      <input class="form-control" type="text" name="update_name" placeholder="请输入标题">
+			    </div>
+				</div>
+				<div class="form-group form-group-xl">
+			    <label class="col-sm-2 control-label" for="update_alias">英文</label>
+			    <div class="col-sm-10">
+			      <input class="form-control" type="text" name="update_alias" placeholder="请输入英文">
+			    </div>
+				</div>
+				<div class="form-group form-group-xl">
+			    <label class="col-sm-2 control-label" for="update_url">链接</label>
+			    <div class="col-sm-10">
+			      <input class="form-control" type="text" name="update_url" placeholder="请输入链接">
+			    </div>
+				</div>
+				<div class="form-group form-group-xl">
+			    <label class="col-sm-2 control-label" for="update_thump">缩略图</label>
+			    <div class="col-sm-10">
+			      <p><img src="/images/logo.png" class="user_thunb_img" style="max-width: 100px;"></p>
+						<input type="file" id="file_upload" multiple="true" name="imageFile" accept="image/*" onchange="updateByForm(this);">
+			    </div>
+				</div>
+				<div class="form-group form-group-xl">
+			    <label class="col-sm-2 control-label"></label>
+			    <div class="col-sm-10">
+			      <button type="submit" class="btn btn-primary" style="margin-right: 20px;" onclick="updateSubmit(this)">提交</button>
+			      <button type="button" class="btn btn-info create_back">返回</button>
+			    </div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+$(function () {
+	var _id = '';
+	getNav()
+	$('.btn-create-newconfig').click(function () {
+		$('.create-config').show()
+	})
+	$('.create_back, .update_back').click(function () {
+		$('.create-config').fadeOut()
+		$('.update-config').fadeOut()
+	})
+})
+
+function uploadByForm(obj) {
+  $("#user_thunb_img")[0].src = window.URL.createObjectURL($(obj)[0].files[0]);
+}
+function updateByForm(obj) {
+	$(".user_thunb_img")[0].src = window.URL.createObjectURL($(obj)[0].files[0]);
+}
+
+// 获取导航
+function getNav() {
+	$.ajax({
+		type: 'GET',
+		url: '/nav/getNav',
+		success: function(data) {
+			// console.log(data)
+			if (data.code == 0) {
+				var newTr = '';
+				for (var i = 0; i < data.data.length; i++) {
+					newTr += '<tr><td>'+data.data[i].order+'</td><td>'+data.data[i].name+'</td><td>'+data.data[i].url+'</td><td style="text-align: left;">'+data.data[i].alias+'</td><td class="operation"><a href="javascript:void(0);" onclick="updateNavi(\''+data.data[i].name+'\')">修改</a><a href="javascript:void(0);" onclick="removeNavi(\''+data.data[i].name+'\')">删除</a></td></tr>';
+				}
+				
+				$('.config-list').append(newTr)
+			}
+		}
+	})
+}
+
+function createSubmit(obj) {
+	$(obj).attr('disabled', 'disabled')
+
+	// 创建一个FormData
+	var formData = new FormData($("#createUploadFile")[0])
+
+	$.ajax({
+		type: 'POST',
+		url: '/nav/createNav',
+		data: formData,
+		async: false,
+    cache: false,
+    contentType: false,
+    processData: false,
+		success: function(data) {
+			// console.log(data)
+			layerCode(data.code, data.msg)
+		}
+	})
+}
+
+// 删除分类
+function removeNavi(name) {
+	$.ajax({
+		type: 'post',
+		url: '/nav/removeNav',
+		data: {name: name},
+		dataType: 'json',
+		success: function (data) {
+			// console.log(data)
+			layerCode(data.code, data.msg)
+		}
+	})
+}
+
+// 更新数据
+function updateNavi(name) {
+	$.ajax({
+		type: 'GET',
+		url: '/nav/updateNavi?name='+name,
+		success: function(data) {
+			// console.log(data);
+			$(".update-config").show();
+			if (data.code == 0) {
+				$('input[name="update_id"]').val(data.data._id)
+				$('input[name="update_order"]').val(data.data.order)
+				$('input[name="update_name"]').val(data.data.name)
+				$('input[name="update_alias"]').val(data.data.alias)
+				$('input[name="update_url"]').val(data.data.url)
+				data.data.thunmb && $('.user_thunb_img').attr('src', '/nav/'+data.data.thunmb)
+			}
+		}
+	})
+}
+
+function updateSubmit(obj) {
+	$(obj).attr('disabled', 'disabled')
+
+	// 创建一个FormData
+	var formData = new FormData($("#updateUploadFile")[0])
+
+	$.ajax({
+		type: 'POST',
+		url: '/nav/updateNavi',
+		data: formData,
+		async: false,
+    cache: false,
+    contentType: false,
+    processData: false,
+		success: function (data) {
+			console.log(data)
+			layerCode(data.code, data.msg, obj)
+		}
+	})
+
+}
+
+function layerCode(code, msg, obj) {
+	var layerIcon = code == 0 ? 1 : 2
+	layer.msg(msg, {
+	  icon: layerIcon,
+	  time: 2000 //2秒关闭（如果不配置，默认是3秒）
+	}, function(){
+
+		if (layerIcon == 1) {
+			window.location.reload()
+		} else {
+			if (obj) {
+				$(obj).removeAttr('disabled')
+			}
+		}
+		
+	}); 
+}
+</script>
+<%- include ../footer.html %>

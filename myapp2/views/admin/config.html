@@ -67,10 +67,11 @@
 		<div class="create-config-wrapper">
 			<h3>修改系统配置</h3>
 			<div class="form-horizontal" style="margin: 0 20px 0 0;">
+				<input type="hidden" readonly name="update_id">
 				<div class="form-group form-group-xl">
 			    <label class="col-sm-2 control-label" for="update_title">标题</label>
 			    <div class="col-sm-10">
-			      <input class="form-control" type="text" name="update_title" placeholder="请输入标题">
+			      <input class="form-control" type="text" name="update_title" readonly placeholder="请输入标题">
 			    </div>
 				</div>
 				<div class="form-group form-group-xl">
@@ -140,6 +141,7 @@ function updateConfig(title) {
 			console.log(data)
 			$(".update-config").show();
 			if (data.code === 0) {
+				$('input[name="update_id"]').val(data.data._id)
 				$('input[name="update_title"]').val(data.data.title)
 				$('input[name="update_name"]').val(data.data.name)
 				$('textarea[name="update_contain"]').val(data.data.con)
@@ -155,6 +157,7 @@ function updateSubmit(obj) {
 		type: 'POST',
 		url: '/config/updateConfig',
 		data: {
+			_id: $('input[name="update_id"]').val(),
 			title: $('input[name="update_title"]').val(),
 			name: $('input[name="update_name"]').val(),
 			contain: $('textarea[name="update_contain"]').val()

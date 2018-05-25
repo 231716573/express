@@ -1,6 +1,137 @@
 <%- include ../header.html %>
 
 <%- include ../admin_left.html %>
-3214214234234
+<link rel="stylesheet" href="/stylesheets/admin-common.css">
+<style>
+.create-config .create-config-wrapper { width: 1024px; margin-left: -512px; top: 5%; }
+.form-inline { margin-bottom: 20px; }
+</style>
 
+<div class="col-xs-12 col-sm-9 col-md-10 container">
+	<h3 class="form-group">文章列表<smal class="pull-right"><a href="/adminArticle/create"  class="btn btn-primary btn-create-newconfig">添加文章</a></smal></h3>
+	<hr />
+	<div>
+		<div class="form-inline">
+		  <div class="form-group">
+		    <label for="searchfield">搜索字段：</label>
+		    <input type="text" class="form-control" id="searchfield" placeholder="请输入标题字段">
+		  </div>
+		  <button type="button" class="btn btn-default" onclick="searchfield(this)">搜索</button>
+		</div>
+		<table class="table table-bordered">
+			<thead>
+				<tr class="info">
+					<th style="width: 50px;"></th>
+					<th style="width: 100px;">作者</th>
+					<th style="width: 100px;">分类</th>
+					<th>标题</th>
+					<th style="width: 100px;">查看次数</th>
+					<th style="width: 180px;">最后编辑时间</th>
+					<th style="width: 100px;">操作</th>
+				</tr>
+			</thead>
+			<tbody class="config-list"></tbody>
+		</table>
+	</div>
+
+</div>
+
+<script type="text/javascript">
+$(function () {
+	var page = 0;
+	getArticle()
+})
+
+function turnTime(_time) {
+	var timestamp = _time;
+	var newDate = new Date();
+	newDate.setTime(timestamp * 1000);
+
+	return newDate.toLocaleString()
+}
+
+// 获取数据
+function getArticle() {
+	$.ajax({
+		type: 'GET',
+		url: '/adminArticle/getArticle?page='+page,
+		dataType: 'json',
+		success:function (data) {
+			console.log(data);
+			if (data.code == 0) {
+				$('.config-list').html('');
+
+				var newTr = '';
+				for (var i = 0; i < data.data.length; i++) {
+					newTr += '<tr><td>'+Number(i+1)+'</td><td>'+data.data[i].author+'</td><td>'+data.data[i].category+'</td><td style="text-align:left;"><a target="_blank" href="/article/'+data.data[i]._id+'">'+data.data[i].title+'</a></td><td>'+data.data[i].clicked+'</td><td>'+turnTime(data.data[i].update_time)+'</td><td class="operation"><a href="javascript:void(0);" onclick="updateArticle(\''+data.data[i]._id+'\')">修改</a><a href="javascript:void(0);" onclick="removeArticle(\''+data.data[i]._id+'\')">删除</a></td></tr>';
+				}
+				
+				$('.config-list').append(newTr)
+			}
+		}
+	})
+}
+
+function updateArticle(_id) {
+	window.location.href= "/adminArticle/update?_id=" + _id;
+}
+
+function removeArticle(_id) {
+	var data = {
+		_id: _id
+	}
+
+	$.ajax({
+		type: 'POST',
+		data: data,
+		dataType: 'json',
+		url: '/adminArticle/removeArticle',
+		success: function (data) {
+			// console.log(data)
+			var layerIcon = data.code == 0 ? 1 : 2
+			layer.msg(data.msg, {
+			  icon: layerIcon,
+			  time: 2000 //2秒关闭（如果不配置，默认是3秒）
+			}, function(){
+				window.location.reload();
+			}); 
+		}
+	})
+
+}
+
+function searchfield(obj) {
+	if ($("#searchfield").val() == "") {
+		getArticle()
+		return false
+	}
+
+	$(obj).attr("disabled", "disabled")
+
+	$.ajax({
+		type: 'GET',
+		url: '/adminArticle/searchfield?name=' + $("#searchfield").val(),
+		success: function (data) {
+			console.log(data)
+			if (data.data.length == 0) {
+				layer.msg('没有数据')
+				return
+			}
+
+			$('.config-list').html('');
+
+			if (data.code == 0) {
+				var newTr = '';
+				for (var i = 0; i < data.data.length; i++) {
+					newTr += '<tr><td>'+Number(i+1)+'</td><td>'+data.data[i].author+'</td><td>'+data.data[i].category+'</td><td style="text-align:left;"><a target="_blank" href="/article/'+data.data[i]._id+'">'+data.data[i].title+'</a></td><td>'+data.data[i].clicked+'</td><td>'+turnTime(data.data[i].update_time)+'</td><td class="operation"><a href="javascript:void(0);" onclick="updateArticle(\''+data.data[i]._id+'\')">修改</a><a href="javascript:void(0);" onclick="removeArticle(\''+data.data[i]._id+'\')">删除</a></td></tr>';
+				}
+				
+				$('.config-list').append(newTr)
+			}
+
+			$(obj).removeAttr("disabled")
+		}
+	})
+}
+</script>
 <%- include ../footer.html %>

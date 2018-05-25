@@ -1,0 +1,52 @@
+.contain { width: 100%; margin:0 auto 50px; position: relative; margin-top: 3px; }
+.banner { width: 100%; max-height: 520px; background-color:#fff; }
+.banner .banner-con { width: 100%; height:100%; position: relative; background: url('http://www.byhill.com/wp-content/uploads/2015/11/bg12.jpg') center top no-repeat ; }
+.banner .banner-con div { position: absolute; right: 0px; top:40%; padding: 20px; z-index: 6; background-color: #fff;  }
+.banner .banner-img1 { max-height: 100%; height: auto; width:auto; }
+.banner .banner-img2 { width: 70%; height: auto; }
+
+.action_box-inner { position: relative; padding: 35px;border-radius: 6px; z-index: 10; background-color: #87d3d2; }
+.action_box-inner:before {position: absolute;content: ''; background-color: #87d3d2;top: -6px;left: 0; z-index: 0; width: 100%;height: 100%;display: block;-webkit-transform: skewY(1.5deg);-ms-transform: skewY(1.5deg);transform: skewY(1.5deg);border-radius: 6px;transform-origin: right top;}
+.action_box-inner:after {position: absolute;content: ''; background-color: rgba(0, 0, 0, 0.2); width: 90%; height: 30%; display: block; border-radius: 4px; -webkit-transform: skewY(-2deg); -ms-transform: skewY(-2deg);  transform: skewY(-2deg);right: 5%; top: -20px; z-index: -2; }
+.action_box-inner .action_box_content { position: relative; max-width: 1120px; margin:0 auto; }
+.action_box-inner .action_box_content h2 { font-size: 18px; color: #fff; }
+.action_box-inner .action_box_content h5 { opacity: 0.6;line-height: 1.6; margin:10px 0px; }
+
+
+.article { max-width: 1120px; margin:0 auto; position: relative; }
+.section { text-align: center; padding: 35px 0; }
+.section h2 { margin-top: 28px; font-size: 30px; line-height: 30px; }
+.section .region { margin: 28px auto 38px; max-width: 1120px; font-size: 16px; line-height: 24px; color:#535353;}
+
+.section .recallphoto,.section .recalltype { width: 100%; max-width: 1120px; margin: 0px auto;}
+.section .recallphoto div { float: left; width: 25%; border-right: 1px solid rgba(0,0,0,0.1); border-bottom: 1px solid rgba(0,0,0,0.1); border-top: 1px solid rgba(0,0,0,0.1); }
+.section .recallphoto div:last-child { border-right: 1px solid rgba(0,0,0,0.1); }
+.section .recallphoto div:first-child { border-left: 1px solid rgba(0,0,0,0.1); }
+.section .recalltype div:last-child { margin-right: 0; }
+.section .recalltype div { position: relative; float: left; width: 23%; margin-right: 2%; height:280px;overflow: hidden;box-shadow: 0px 0px 3px #000; opacity: 0.7; border-radius: 3px; -webkit-transition: opacity .15s ease-out, box-shadow .15s ease-out; transition: opacity .15s ease-out, box-shadow .15s ease-out; }
+.section .recalltype div:hover { opacity:1; box-shadow:0px 0px 10px #000; }
+.section .recalltype div:hover a { left: 10px; background-color: #00C5CD; }
+.section .recalltype div a { position: absolute; bottom: 32px; left: 0px; padding:6px 10px; background-color: #87d3d2;-webkit-transition: left 0.3s,background-color 0.3s; color:#fff; }
+.section .recalltype div img { width: 80%; height:auto; margin:25px 10% 30px; }
+.section .recalltype div h3 { position: absolute; width: 100%; text-align: center; bottom: 40px; font-size: 17px; }
+.section .recalltype div p {text-overflow: ellipsis; white-space: nowrap; overflow: hidden; position: absolute; bottom: 2px; font-size: 14px; line-height: 1.6; margin:10px 5%; width: 90%; }
+
+.xian { width:100%; clear: both; padding-top: 70px;  }
+.xian img { width: 100%; height: auto; }
+.section-title { width: 100%; padding: 30px 0px;background-color: #87d3d2; }
+.section-title .section-desc { width: 100%; max-width: 1120px; margin: 0px auto; }
+.section-title .section-desc h3 { font-size: 18px; color: #fff; }
+.section-title .section-desc p { font-size: 12px; opacity: 0.6;line-height: 1.6; margin-top:20px; }
+
+.recallnote { max-width: 1120px; margin:0 auto; position: relative; text-align: left; }
+.recallnote div { border:1px solid #ddd; float: left; width: 32%; margin-right: 2%; overflow: hidden; margin-bottom: 20px; -webkit-transition: box-shadow .15s ease-out; transition: box-shadow .15s ease-out; border-radius: 5px; }
+.recallnote div:hover { box-shadow:0px 0px 10px #000; }
+.recallnote div:nth-child(3n) { margin-right: 0; }
+.recallnote div a { display: block; overflow: hidden; position: relative; margin:5px 0 0; padding: 0 5px; box-sizing: border-box; width:100%; height: 200px; text-align:center;}
+.recallnote div a:hover span { left: 10px; background-color: #00C5CD; }
+.recallnote div a span { position: absolute; bottom: 10px; left: -8px; padding:6px 10px; background-color: #87d3d2;-webkit-transition: left 0.3s,background-color 0.3s; color:#fff; }
+.recallnote div img { max-width: 100%; height: auto; display: block; margin:0 auto; }
+.recallnote div p { font-size: 14px; color: #333; overflow:hidden;white-space:nowrap;text-overflow:ellipsis; padding:5px; }
+.recallnote div em { padding:3px 5px; display: inline-block; color: rgba(83,83,83,0.7); font-style: italic; margin:5px 0px 0px;  }
+.recallnote div em i { color: #000; }
+

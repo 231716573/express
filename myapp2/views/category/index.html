@@ -12,8 +12,8 @@
 				<tr class="info">
 					<th style="width: 80px;">排序</th>
 					<th style="width: 140px;">名称</th>
-					<th style="width: 140px;">英文</th>
-					<th>链接</th>
+					<th style="width: 140px;">链接</th>
+					<th>描述</th>
 					<th style="width: 120px;">操作</th>
 				</tr>
 			</thead>
@@ -45,15 +45,15 @@
 			    </div>
 				</div>
 				<div class="form-group form-group-xl">
-			    <label class="col-sm-2 control-label" for="create_alias">英文</label>
-			    <div class="col-sm-10">
-			      <input class="form-control" type="text" name="create_alias" placeholder="请输入英文">
-			    </div>
-				</div>
-				<div class="form-group form-group-xl">
 			    <label class="col-sm-2 control-label" for="create_url">链接</label>
 			    <div class="col-sm-10">
 			      <input class="form-control" type="text" name="create_url" placeholder="请输入链接">
+			    </div>
+				</div>
+				<div class="form-group form-group-xl">
+			    <label class="col-sm-2 control-label" for="create_description">描述</label>
+			    <div class="col-sm-10">
+			      <input class="form-control" type="text" name="create_description" placeholder="请输入描述">
 			    </div>
 				</div>
 				<div class="form-group form-group-xl">
@@ -86,15 +86,15 @@
 			    </div>
 				</div>
 				<div class="form-group form-group-xl">
-			    <label class="col-sm-2 control-label" for="update_alias">英文</label>
-			    <div class="col-sm-10">
-			      <input class="form-control" type="text" name="update_alias" placeholder="请输入英文">
-			    </div>
-				</div>
-				<div class="form-group form-group-xl">
 			    <label class="col-sm-2 control-label" for="update_url">链接</label>
 			    <div class="col-sm-10">
 			      <input class="form-control" type="text" name="update_url" placeholder="请输入链接">
+			    </div>
+				</div>
+				<div class="form-group form-group-xl">
+			    <label class="col-sm-2 control-label" for="update_description">描述</label>
+			    <div class="col-sm-10">
+			      <input class="form-control" type="text" name="update_description" placeholder="请输入描述">
 			    </div>
 				</div>
 				<div class="form-group form-group-xl">
@@ -111,6 +111,7 @@
 
 <script type="text/javascript">
 $(function () {
+	var _id = '';
 	getCategory()
 	$('.btn-create-newconfig').click(function () {
 		$('.create-config').show()
@@ -132,7 +133,7 @@ function getCategory() {
 			if (data.code == 0) {
 				var newTr = '';
 				for (var i = 0; i < data.data.length; i++) {
-					newTr += '<tr><td>'+Number(i+1)+'</td><td>'+data.data[i].name+'</td><td>'+data.data[i].alias+'</td><td style="text-align: left;">'+data.data[i].url+'</td><td class="operation"><a href="javascript:void(0);" onclick="updateCate(\''+data.data[i].name+'\')">修改</a><a href="javascript:void(0);" onclick="removeCate(\''+data.data[i].name+'\')">删除</a></td></tr>';
+					newTr += '<tr><td>'+data.data[i].order+'</td><td>'+data.data[i].name+'</td><td>'+data.data[i].url+'</td><td style="text-align: left;">'+data.data[i].description+'</td><td class="operation"><a href="javascript:void(0);" onclick="updateCate(\''+data.data[i].name+'\')">修改</a><a href="javascript:void(0);" onclick="removeCate(\''+data.data[i].name+'\')">删除</a></td></tr>';
 				}
 				
 				$('.config-list').append(newTr)
@@ -146,8 +147,8 @@ function createSubmit(obj) {
 	var data = {
 		order: $('input[name=create_order]').val(),
 		name: $('input[name=create_name]').val(),
-		alias: $('input[name=create_alias]').val(),
 		url: $('input[name=create_url]').val(),
+		description: $('input[name=create_description]').val(),
 	}
 
 	$.ajax({
@@ -156,14 +157,8 @@ function createSubmit(obj) {
 		data: data,
 		dataType: 'json',
 		success: function (data) {
-			console.log(data)
-			var layerIcon = data.code == 0 ? 1 : 2
-			layer.msg(data.msg, {
-			  icon: layerIcon,
-			  time: 2000 //2秒关闭（如果不配置，默认是3秒）
-			}, function(){
-				layerIcon == 1 ? window.location.reload() : $(obj).removeAttr('disabled')
-			}); 
+			// console.log(data)
+			layerCode(data.code, data.msg, obj)
 		}
 	})
 }
@@ -176,14 +171,8 @@ function removeCate(name) {
 		data: {name: name},
 		dataType: 'json',
 		success: function(data) {
-			console.log(data)
-			var layerIcon = data.code == 0 ? 1 : 2
-			layer.msg(data.msg, {
-			  icon: layerIcon,
-			  time: 2000 //2秒关闭（如果不配置，默认是3秒）
-			}, function(){
-				window.location.reload()
-			}); 
+			// console.log(data)
+			layerCode(data.code, data.msg)
 		}
 	})
 }
@@ -195,13 +184,14 @@ function updateCate(name) {
 		url: '/category/updateCate?name='+name,
 		dataType: 'json',
 		success: function (data) {
-			console.log(data)
+			// console.log(data)
 			$(".update-config").show();
 			if (data.code === 0) {
+				_id = data.data._id
 				$('input[name="update_order"]').val(data.data.order)
 				$('input[name="update_name"]').val(data.data.name)
-				$('input[name="update_alias"]').val(data.data.alias)
 				$('input[name="update_url"]').val(data.data.url)
+				$('input[name="update_description"]').val(data.data.url)
 			}
 		}
 	})
@@ -209,15 +199,41 @@ function updateCate(name) {
 
 function updateSubmit(obj) {
 	$(obj).attr('disabled', 'disabled')
+	var data = {
+		_id: _id,
+		order: $('input[name=update_order]').val(),
+		name: $('input[name=update_name]').val(),
+		url: $('input[name=update_url]').val(),
+		description: $('input[name=update_description]').val(),
+	}
+
 	$.ajax({
 		type: 'POST',
 		url: '/category/updateCate',
 		data: data,
 		dataType: 'json',
 		success: function(data) {
-			console.log(data)
+			layerCode(data.code, data.msg, obj)
 		}
 	})
+}
+
+function layerCode(code, msg, obj) {
+	var layerIcon = code == 0 ? 1 : 2
+	layer.msg(msg, {
+	  icon: layerIcon,
+	  time: 2000 //2秒关闭（如果不配置，默认是3秒）
+	}, function(){
+
+		if (layerIcon == 1) {
+			window.location.reload()
+		} else {
+			if (obj) {
+				$(obj).removeAttr('disabled')
+			}
+		}
+		
+	}); 
 }
 </script>
 <%- include ../footer.html %>

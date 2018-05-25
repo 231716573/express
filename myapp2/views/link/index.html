@@ -1,0 +1,240 @@
+<%- include ../header.html %>
+
+<%- include ../admin_left.html %>
+<link rel="stylesheet" href="/stylesheets/admin-common.css">
+
+<div class="col-xs-12 col-sm-9 col-md-10 container">
+	<h3 class="form-group">友情链接<smal class="pull-right"><a href="javascript:void(0);"  class="btn btn-primary btn-create-newconfig">添加友情链接</a></smal></h3>
+	<hr />
+	<div>
+		<table class="table table-bordered">
+			<thead>
+				<tr class="info">
+					<th style="width: 80px;">排序</th>
+					<th style="width: 140px;">名称</th>
+					<th style="width: 140px;">标题</th>
+					<th>链接</th>
+					<th style="width: 120px;">操作</th>
+				</tr>
+			</thead>
+			<tbody class="config-list"></tbody>
+		</table>
+<!-- 		<div class="form-group">
+			<div class="col-sm-8">
+				<button type="submit" class="btn btn-primary" style="margin-right: 20px;">提交</button>
+				<input type="button" class="back btn btn-info" value="返回" onclick="history.go(-1)">
+			</div>
+		</div> -->
+	</div>
+	<!-- 添加友情链接 -->
+	<div class="create-config" style="display: none;">
+		<div class="create-config-bg"></div>
+		<div class="create-config-wrapper">
+			<h3>添加友情链接</h3>
+			<div class="form-horizontal" style="margin: 0 20px 0 0;">
+				<div class="form-group form-group-xl">
+			    <label class="col-sm-2 control-label" for="create_order">排序</label>
+			    <div class="col-sm-10">
+			      <input class="form-control" type="text" name="create_order" placeholder="请输入排序">
+			    </div>
+				</div>
+				<div class="form-group form-group-xl">
+			    <label class="col-sm-2 control-label" for="create_name">名称</label>
+			    <div class="col-sm-10">
+			      <input class="form-control" type="text" name="create_name" placeholder="请输入名称">
+			    </div>
+				</div>
+				<div class="form-group form-group-xl">
+			    <label class="col-sm-2 control-label" for="create_title">标题</label>
+			    <div class="col-sm-10">
+			      <input class="form-control" type="text" name="create_title" placeholder="请输入标题">
+			    </div>
+				</div>
+				<div class="form-group form-group-xl">
+			    <label class="col-sm-2 control-label" for="create_url">链接</label>
+			    <div class="col-sm-10">
+			      <input class="form-control" type="text" name="create_url" placeholder="请输入链接">
+			    </div>
+				</div>
+				<div class="form-group form-group-xl">
+			    <label class="col-sm-2 control-label"></label>
+			    <div class="col-sm-10">
+			      <button type="submit" class="btn btn-primary" style="margin-right: 20px;" onclick="createSubmit(this)">提交</button>
+			      <button type="submit" class="btn btn-info create_back">返回</button>
+			    </div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- 修改友情链接 -->
+	<div class="update-config" style="display: none;">
+		<div class="create-config-bg"></div>
+		<div class="create-config-wrapper">
+			<h3>修改友情链接</h3>
+			<div class="form-horizontal" style="margin: 0 20px 0 0;">
+				<div class="form-group form-group-xl">
+			    <label class="col-sm-2 control-label" for="update_order">排序</label>
+			    <div class="col-sm-10">
+			      <input class="form-control" type="text" name="update_order" placeholder="请输入排序">
+			    </div>
+				</div>
+				<div class="form-group form-group-xl">
+			    <label class="col-sm-2 control-label" for="update_name">名称</label>
+			    <div class="col-sm-10">
+			      <input class="form-control" type="text" name="update_name" placeholder="请输入名称">
+			    </div>
+				</div>
+				<div class="form-group form-group-xl">
+			    <label class="col-sm-2 control-label" for="update_title">标题</label>
+			    <div class="col-sm-10">
+			      <input class="form-control" type="text" name="update_title" placeholder="请输入标题">
+			    </div>
+				</div>
+				<div class="form-group form-group-xl">
+			    <label class="col-sm-2 control-label" for="update_url">链接</label>
+			    <div class="col-sm-10">
+			      <input class="form-control" type="text" name="update_url" placeholder="请输入链接">
+			    </div>
+				</div>
+				<div class="form-group form-group-xl">
+			    <label class="col-sm-2 control-label"></label>
+			    <div class="col-sm-10">
+			      <button type="submit" class="btn btn-primary" style="margin-right: 20px;" onclick="updateSubmit(this)">提交</button>
+			      <button type="submit" class="btn btn-info update_back">返回</button>
+			    </div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+$(function () {
+	var _id = '';
+	getLink()
+	$('.btn-create-newconfig').click(function () {
+		$('.create-config').show()
+	})
+	$('.create_back, .update_back').click(function () {
+		$('.create-config').fadeOut()
+		$('.update-config').fadeOut()
+	})
+})
+
+// 获取导航
+function getLink() {
+	$.ajax({
+		type: 'GET',
+		url: '/link/getLink',
+		success: function(data) {
+			console.log(data)
+			if (data.code == 0) {
+				var newTr = '';
+				for (var i = 0; i < data.data.length; i++) {
+					newTr += '<tr><td>'+data.data[i].order+'</td><td>'+data.data[i].name+'</td><td>'+data.data[i].title+'</td><td style="text-align: left;"><a href="'+data.data[i].url+'" target="_blank">'+data.data[i].url+'</a></td><td class="operation"><a href="javascript:void(0);" onclick="updateLink(\''+data.data[i].name+'\')">修改</a><a href="javascript:void(0);" onclick="removeLink(\''+data.data[i].name+'\')">删除</a></td></tr>';
+				}
+				
+				$('.config-list').append(newTr)
+			}
+		}
+	})
+}
+
+function createSubmit(obj) {
+	var data = {
+		order: $('input[name=create_order]').val(),
+		name: $('input[name=create_name]').val(),
+		title: $('input[name=create_title]').val(),
+		url: $('input[name=create_url]').val()
+	}
+
+	$.ajax({
+		type: 'POST',
+		url: '/link/createLink',
+		data: data,
+		dataType: 'json',
+		success: function(data) {
+			// console.log(data)
+			layerCode(data.code, data.msg)
+		}
+	})
+}
+
+// 删除分类
+function removeLink(name) {
+	$.ajax({
+		type: 'get',
+		url: '/link/removeLink',
+		data: {name: name},
+		dataType: 'json',
+		success: function (data) {
+			// console.log(data)
+			layerCode(data.code, data.msg)
+		}
+	})
+}
+
+// 更新数据
+function updateLink(name) {
+	$.ajax({
+		type: 'GET',
+		url: '/link/updateLink?name='+name,
+		success: function(data) {
+			// console.log(data);
+			$(".update-config").show();
+			if (data.code == 0) {
+				_id = data.data._id;
+				$('input[name="update_order"]').val(data.data.order)
+				$('input[name="update_name"]').val(data.data.name)
+				$('input[name="update_title"]').val(data.data.title)
+				$('input[name="update_url"]').val(data.data.url)
+			}
+		}
+	})
+}
+
+function updateSubmit(obj) {
+	$(obj).attr('disabled', 'disabled')
+
+	var data = {
+		_id: _id,
+		order: $('input[name="update_order"]').val(),
+		name: $('input[name="update_name"]').val(),
+		title: $('input[name="update_title"]').val(),
+		url: $('input[name="update_url"]').val()
+	}
+
+	$.ajax({
+		type: 'POST',
+		url: '/link/updateLink',
+		data: data,
+		dataType: 'json',
+		success: function (data) {
+			console.log(data)
+			layerCode(data.code, data.msg, obj)
+		}
+	})
+
+}
+
+
+function layerCode(code, msg, obj) {
+	var layerIcon = code == 0 ? 1 : 2
+	layer.msg(msg, {
+	  icon: layerIcon,
+	  time: 2000 //2秒关闭（如果不配置，默认是3秒）
+	}, function(){
+
+		if (layerIcon == 1) {
+			window.location.reload()
+		} else {
+			if (obj) {
+				$(obj).removeAttr('disabled')
+			}
+		}
+		
+	}); 
+}
+</script>
+<%- include ../footer.html %>

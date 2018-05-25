@@ -9,20 +9,20 @@ router.get('/getCategory', function (req, res, next) {
 			data: cate,
 			msg: '查询成功'
 		})
-	})
+	}, 'order', 1)
 })
 
 router.post('/createCategory', function(req, res, next) {
 	var order = req.body.order,
 			name = req.body.name,
-			alias = req.body.alias,
-			url = req.body.url;
+			url = req.body.url,
+			description = req.body.description;
 
-	var newCategory = new category(order, name, alias, url)
+	var newCategory = new category(order, name, url, description)
 
 
 	category.get(name, function (err, cate) {
-		if(cate[0]) {
+		if (cate[0]) {
 			res.send({
 				code: 2,
 				cate: cate[0],
@@ -86,9 +86,33 @@ router.get('/updateCate', function (req, res, next) {
 router.post('/updateCate', function (req, res, next) {
 	var order = req.body.order,
 			name = req.body.name,
-			alias = req.body.alias,
-			url = req.body.url;
+			url = req.body.url,
+			description = req.body.description,
+			_id = req.body._id;
 
-	
+	var data = {
+		order, 
+		name, 
+		url, 
+		description,
+		update_time: Math.round(new Date() / 1000)
+	}
+
+
+	category.update(_id, data, function(err, result) {
+		if (err) {
+			res.send({
+				code: 2,
+        msg: err
+			})
+			return
+		}
+
+		res.send({
+			code: 0,
+			msg: '修改成功！',
+			data: result
+		})
+	})
 })
 module.exports = router;

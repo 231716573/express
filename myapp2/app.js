@@ -8,6 +8,7 @@ var multer = require('multer');
 var session = require('express-session')
 var MongoStore = require('connect-mongo')(session);
 var setting = require('./setting');
+var fs = require("fs");//操作文件
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -16,6 +17,14 @@ var adminRouter = require('./routes/admin');
 var adminArticleRouter = require('./routes/adminArticle');
 var configRouter = require('./routes/config');
 var categoryRouter = require('./routes/category');
+var navRouter = require('./routes/nav');
+var linkRouter = require('./routes/link');
+var diaryRouter = require('./routes/diary');
+var pictureRouter =  require('./routes/picture');
+var aboutRouter = require('./routes/about');
+
+var filter = require('./public/javascripts/filter');
+
 
 var app = express();
 
@@ -29,15 +38,35 @@ app.use("*", function (req, res, next) {
     next()
   }
 });
+// app.use(multer({
+//   dest: './public/multer',
+//   rename: function (fieldname, filename) {
+//     return filename;
+//   }
+// }));
 
+let uploadSingle = multer({
+  dest: './public/multer'
+});
 
-app.use(multer({
-  dest: './public/multer',
-  rename: function (fieldname, filename) {
-    return filename;
-  }
-}));
+app.post('/uploadAvatar', uploadSingle.single('imageFile'), (req, res, next) => {
+  var file = req.file;
 
+  // 获得文件的临时路径
+  var tmp_path = file.path;
+  // 指定文件上传后的目录 - 示例为"images"目录。 
+  var target_path = './public/avatar/' + Math.round(new Date() / 1000) + '_' + file.originalname;
+
+  // 移动文件
+  fs.rename(tmp_path, target_path, function(err) {
+    if (err) throw err;
+    // 删除临时文件夹文件, 
+    fs.unlink(tmp_path, function() {
+      if (err) throw err;
+    });
+  });
+
+});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -50,6 +79,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use("/ueditor/ue", require('./ue.js'));
+
 app.use(session({
   secret: setting.cookieSecret,
   saveUninitialized:false,
@@ -61,16 +92,22 @@ app.use(session({
 }))
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/users', filter.authorize, usersRouter);
 app.use('/login', loginRouter);
-app.use('/admin', adminRouter);
-app.use('/adminArticle', adminArticleRouter);
-app.use('/config', configRouter);
-app.use('/category', categoryRouter)
+app.use('/admin', filter.authorize, adminRouter);
+app.use('/adminArticle', filter.authorize, adminArticleRouter);
+app.use('/config', filter.authorize, configRouter);
+app.use('/category', filter.authorize, categoryRouter)
+app.use('/nav', filter.authorize, navRouter)
+app.use('/link', filter.authorize, linkRouter)
+app.use('/diary', filter.authorize, diaryRouter)
+app.use('/picture', filter.authorize, pictureRouter)
+app.use('/about', filter.authorize, aboutRouter)
+
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(404));
+app.get('*', function(req, res){
+  res.redirect('/error');
 });
 
 // error handler
