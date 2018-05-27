@@ -32,13 +32,28 @@
 			</thead>
 			<tbody class="config-list"></tbody>
 		</table>
+		<nav aria-label="Page navigation">
+		  <ul class="pagination">
+<!-- 		    <li>
+		      <a href="#" aria-label="Previous">
+		        <span aria-hidden="true">&laquo;</span>
+		      </a>
+		    </li> -->
+		    <!-- <li><a href="#">1</a></li> -->
+<!-- 		    <li>
+		      <a href="#" aria-label="Next">
+		        <span aria-hidden="true">&raquo;</span>
+		      </a>
+		    </li> -->
+		  </ul>
+		</nav>
 	</div>
 
 </div>
 
 <script type="text/javascript">
 $(function () {
-	var page = 0;
+	getCount()
 	getArticle()
 })
 
@@ -52,9 +67,11 @@ function turnTime(_time) {
 
 // 获取数据
 function getArticle() {
+	var limit = 10;
+
 	$.ajax({
 		type: 'GET',
-		url: '/adminArticle/getArticle?page='+page,
+		url: '/adminArticle/getArticle?page='+GetString('page')+'&limit='+limit,
 		dataType: 'json',
 		success:function (data) {
 			console.log(data);
@@ -67,6 +84,41 @@ function getArticle() {
 				}
 				
 				$('.config-list').append(newTr)
+			}
+		}
+	})
+}
+
+function getCount() {
+	console.log('getCount')
+	$.ajax({
+		type: 'GET',
+		url: '/adminArticle/getCount',
+		success: function (data) {
+			// console.log(data)
+			if (data.code == 0) {
+				var remainder = data.data/5;
+				var firstRemain = String(remainder).split('.');
+
+				var num = firstRemain[1] ? Number(firstRemain[0]) + 1 : Number(firstRemain[0]);
+				if (num >= 1 && GetString('page') != 0) {
+					var newNav = '<li><a href="/adminArticle?active=article&page=0" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>';
+				} else {
+					var newNav = '';
+				}
+
+				for (var i = 0; i < num; i++) {
+					if (GetString('page') == i) {
+						newNav += '<li class="active"><a href="/adminArticle?active=article&page='+i+'">'+[Number(i)+1]+'</a></li>';
+					} else {
+						newNav += '<li><a href="/adminArticle?active=article&page='+i+'">'+[Number(i)+1]+'</a></li>';
+					}
+				}
+
+				if (num >= 1 && GetString('page') != num - 1) {
+					newNav += '<li><a href="/adminArticle?active=article&page='+(num - 1)+'" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>';
+				}
+				$('.pagination').append(newNav)
 			}
 		}
 	})

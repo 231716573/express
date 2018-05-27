@@ -43,6 +43,26 @@ Article.getById = function (_id, callback, limitNum, skipNum) {
 	}, limitNumber, skipNumber, 'update_time', -1)
 }
 
+Article.getCount = function (_id, cb) {
+	var selectData = function(db, callback) {
+		// 连接到表
+		var collection = db.collection('article');
+
+		collection.count({}, function(err, count){
+			callback(null, count)
+		})
+	}
+
+	MongoClient.connect(setting.url, function (err, db) {
+		console.log('mongodb->getCount 连接成功')
+		selectData(db, function (newerr, result) {
+			db.close();
+			cb(null, result)
+		})
+	})
+
+}
+
 
 // 删除一篇文章
 Article.remove = function (_id, callback) {

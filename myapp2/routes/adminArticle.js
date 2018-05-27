@@ -134,9 +134,12 @@ router.get('/getArticle', function (req, res, next) {
 		query += req.query._id
 	}
 
-	var limitN = req.query.limit ? req.query.limit : 100;
+	var limitN = req.query.limit ? req.query.limit : 100;	
+	var skipN = req.query.page ? Number(req.query.page) * limitN : 0;
 
-	console.log('limitN:'+limitN)
+	console.log('page:'+req.query.page)
+	console.log('limitN:'+req.query.limit)
+	console.log('skipN:'+skipN)
 
 	article.getById(query, function (err, result) {
 		if (err) {
@@ -152,7 +155,17 @@ router.get('/getArticle', function (req, res, next) {
 			data: result,
 			msg: '查询成功！'
 		})
-	}, limitN)
+	}, limitN, skipN)
+})
+
+router.get('/getCount', function (req, res, next) {
+	article.getCount('', function (err, result) {
+		res.send({
+			code: 0,
+			data: result,
+			msg: 'getCount成功！'
+		})
+	})
 })
 
 router.post('/removeArticle', function (req, res, next) {
