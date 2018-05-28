@@ -23,7 +23,7 @@
 .section .recallphoto div:last-child { border-right: 1px solid rgba(0,0,0,0.1); }
 .section .recallphoto div:first-child { border-left: 1px solid rgba(0,0,0,0.1); }
 .section .recalltype div:last-child { margin-right: 0; }
-.section .recalltype div { position: relative; float: left; width: 23%; margin-right: 2%; height:280px;overflow: hidden;box-shadow: 0px 0px 3px #000; opacity: 0.7; border-radius: 3px; -webkit-transition: opacity .15s ease-out, box-shadow .15s ease-out; transition: opacity .15s ease-out, box-shadow .15s ease-out; }
+.section .recalltype div { position: relative; float: left; width: 23%; margin-right: 2%; height:280px;overflow: hidden;box-shadow: 0px 0px 3px #000; opacity: 0.85; border-radius: 3px; -webkit-transition: opacity .15s ease-out, box-shadow .15s ease-out; transition: opacity .15s ease-out, box-shadow .15s ease-out; }
 .section .recalltype div:hover { opacity:1; box-shadow:0px 0px 10px #000; }
 .section .recalltype div:hover a { left: 10px; background-color: #00C5CD; }
 .section .recalltype div a { position: absolute; bottom: 32px; left: 0px; padding:6px 10px; background-color: #87d3d2;-webkit-transition: left 0.3s,background-color 0.3s; color:#fff; }

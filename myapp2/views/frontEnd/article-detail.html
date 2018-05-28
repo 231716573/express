@@ -39,14 +39,14 @@
     <div class="nextinfo">
       <p>下一篇：
         <% if(next.title){ %>
-          <a href="/article/<%= next._id %>"><%= next.title %></a>
+          <a class="next-title" href="/article/<%= next._id %>"><%= next.title %></a>
         <% }else{ %>
           <span>没有了</span>
         <% } %>
       </p>
       <p>上一篇：
         <% if(prev.title){ %>
-          <a href="/article/<%= prev._id %>"><%= prev.title %></a>
+          <a class="prev-title" href="/article/<%= prev._id %>"><%= prev.title %></a>
         <% }else{ %>
           <span>没有了</span>
         <% } %>
@@ -68,6 +68,8 @@ Utils.encodeTextAreaString= function(str) {
 $(function () {
 	$("#new-diary").html(Utils.encodeTextAreaString($("#new-diary").html()))
 	$("#diary-time").html(turnTime($("#diary-time").html()))
+  $(".prev-title").html($(".prev-title").html().substr(0, 12)+'...')
+  $(".next-title").html($(".next-title").html().substr(0, 12)+'...')
 
   $.ajax({
     type: 'POST',

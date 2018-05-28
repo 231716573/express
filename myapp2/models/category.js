@@ -2,11 +2,12 @@ var Db = require('./db');
 var mongodb = new Db();
 var ObjectID = require('mongodb').ObjectID;
 
-function Category(order, name, url, description) {
+function Category(order, name, url, description, thunmb) {
 	this.order = order;
 	this.name = name;
 	this.url = url;
 	this.description = description;
+	this.thunmb = thunmb;
 }
 
 module.exports = Category;
@@ -28,6 +29,7 @@ Category.prototype.save = function(callback) {
   	name: this.name,
   	url: this.url,
   	description: this.description,
+  	thunmb: this.thunmb,
   	create_time: time
   };
 
@@ -89,4 +91,13 @@ Category.remove = function(name, callback) {
 		}
 		callback(null, result)
 	})
+}
+
+Category.getPointCate = function(_id, callback) {
+	mongodb.find({_id: ObjectID(_id)}, 'category', function(err, result) {
+    if (err) {
+      return callback(err)
+    }
+    callback(null, result)
+  })
 }

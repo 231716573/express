@@ -29,6 +29,10 @@ router.get('/about', function(req, res, next) {
 	})
 });
 
+router.get('/category', function(req, res, next) {
+	res.render('frontEnd/category', { title: '分类 - 小波波滚地球' })
+});
+
 router.get('/picture', function(req, res, next) {
 	res.render('frontEnd/picture', { title: '相册 - 小波波滚地球' })
 });

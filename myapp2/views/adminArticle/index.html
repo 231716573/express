@@ -33,19 +33,7 @@
 			<tbody class="config-list"></tbody>
 		</table>
 		<nav aria-label="Page navigation">
-		  <ul class="pagination">
-<!-- 		    <li>
-		      <a href="#" aria-label="Previous">
-		        <span aria-hidden="true">&laquo;</span>
-		      </a>
-		    </li> -->
-		    <!-- <li><a href="#">1</a></li> -->
-<!-- 		    <li>
-		      <a href="#" aria-label="Next">
-		        <span aria-hidden="true">&raquo;</span>
-		      </a>
-		    </li> -->
-		  </ul>
+		  <ul class="pagination"></ul>
 		</nav>
 	</div>
 
@@ -67,7 +55,7 @@ function turnTime(_time) {
 
 // 获取数据
 function getArticle() {
-	var limit = 10;
+	var limit = 5;
 
 	$.ajax({
 		type: 'GET',
@@ -90,7 +78,7 @@ function getArticle() {
 }
 
 function getCount() {
-	console.log('getCount')
+	// console.log('getCount')
 	$.ajax({
 		type: 'GET',
 		url: '/adminArticle/getCount',

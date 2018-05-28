@@ -19,19 +19,13 @@
 			</thead>
 			<tbody class="config-list"></tbody>
 		</table>
-<!-- 		<div class="form-group">
-			<div class="col-sm-8">
-				<button type="submit" class="btn btn-primary" style="margin-right: 20px;">提交</button>
-				<input type="button" class="back btn btn-info" value="返回" onclick="history.go(-1)">
-			</div>
-		</div> -->
 	</div>
 	<!-- 添加文章分类 -->
 	<div class="create-config" style="display: none;">
 		<div class="create-config-bg"></div>
 		<div class="create-config-wrapper">
 			<h3>添加文章分类</h3>
-			<div class="form-horizontal" style="margin: 0 20px 0 0;">
+			<form class="form-horizontal" style="margin: 0 20px 0 0;" method="post" enctype="multipart/form-data" id="createUploadFile">
 				<div class="form-group form-group-xl">
 			    <label class="col-sm-2 control-label" for="create_order">排序</label>
 			    <div class="col-sm-10">
@@ -57,13 +51,20 @@
 			    </div>
 				</div>
 				<div class="form-group form-group-xl">
+			    <label class="col-sm-2 control-label" for="create_thump">缩略图</label>
+			    <div class="col-sm-10">
+			      <p><img src="/images/logo.png" id="user_thunb_img" style="max-width: 100px;"></p>
+						<input type="file" id="file_upload" multiple="true" name="imageFile" accept="image/*" onchange="uploadByForm(this);">
+			    </div>
+				</div>
+				<div class="form-group form-group-xl">
 			    <label class="col-sm-2 control-label"></label>
 			    <div class="col-sm-10">
 			      <button type="submit" class="btn btn-primary" style="margin-right: 20px;" onclick="createSubmit(this)">提交</button>
-			      <button type="submit" class="btn btn-info create_back">返回</button>
+			      <button type="button" class="btn btn-info create_back">返回</button>
 			    </div>
 				</div>
-			</div>
+			</form>
 		</div>
 	</div>
 
@@ -72,7 +73,8 @@
 		<div class="create-config-bg"></div>
 		<div class="create-config-wrapper">
 			<h3>修改文章分类</h3>
-			<div class="form-horizontal" style="margin: 0 20px 0 0;">
+			<form class="form-horizontal" style="margin: 0 20px 0 0;" method="post" enctype="multipart/form-data" id="updateUploadFile">
+				<input type="hidden" name="update_id" readonly>
 				<div class="form-group form-group-xl">
 			    <label class="col-sm-2 control-label" for="update_order">排序</label>
 			    <div class="col-sm-10">
@@ -98,13 +100,20 @@
 			    </div>
 				</div>
 				<div class="form-group form-group-xl">
+			    <label class="col-sm-2 control-label" for="update_thump">缩略图</label>
+			    <div class="col-sm-10">
+			      <p><img src="/images/logo.png" class="user_thunb_img" style="max-width: 100px;"></p>
+						<input type="file" id="file_upload" multiple="true" name="imageFile" accept="image/*" onchange="updateByForm(this);">
+			    </div>
+				</div>
+				<div class="form-group form-group-xl">
 			    <label class="col-sm-2 control-label"></label>
 			    <div class="col-sm-10">
 			      <button type="submit" class="btn btn-primary" style="margin-right: 20px;" onclick="updateSubmit(this)">提交</button>
-			      <button type="submit" class="btn btn-info update_back">返回</button>
+			      <button type="button" class="btn btn-info update_back">返回</button>
 			    </div>
 				</div>
-			</div>
+			</form>
 		</div>
 	</div>
 </div>
@@ -121,6 +130,14 @@ $(function () {
 		$('.update-config').fadeOut()
 	})
 })
+
+function uploadByForm(obj) {
+  $("#user_thunb_img")[0].src = window.URL.createObjectURL($(obj)[0].files[0]);
+}
+function updateByForm(obj) {
+	$(".user_thunb_img")[0].src = window.URL.createObjectURL($(obj)[0].files[0]);
+}
+
 
 // 获取分类
 function getCategory() {
@@ -144,21 +161,21 @@ function getCategory() {
 
 function createSubmit(obj) {
 	$(obj).attr('disabled', 'disabled')
-	var data = {
-		order: $('input[name=create_order]').val(),
-		name: $('input[name=create_name]').val(),
-		url: $('input[name=create_url]').val(),
-		description: $('input[name=create_description]').val(),
-	}
+
+	// 创建一个FormData
+	var formData = new FormData($("#createUploadFile")[0])
 
 	$.ajax({
 		type: 'POST',
 		url: '/category/createCategory',
-		data: data,
-		dataType: 'json',
-		success: function (data) {
+		data: formData,
+		async: false,
+    cache: false,
+    contentType: false,
+    processData: false,
+		success: function(data) {
 			// console.log(data)
-			layerCode(data.code, data.msg, obj)
+			layerCode(data.code, data.msg)
 		}
 	})
 }
@@ -188,10 +205,17 @@ function updateCate(name) {
 			$(".update-config").show();
 			if (data.code === 0) {
 				_id = data.data._id
+				$('input[name="update_id"]').val(data.data._id)
 				$('input[name="update_order"]').val(data.data.order)
 				$('input[name="update_name"]').val(data.data.name)
 				$('input[name="update_url"]').val(data.data.url)
-				$('input[name="update_description"]').val(data.data.url)
+				$('input[name="update_description"]').val(data.data.description)
+
+				if (data.data.thunmb) {
+					$('.user_thunb_img').attr('src', '/category/'+data.data.thunmb)
+				} else {
+					$('.user_thunb_img').attr('src', '/images/logo.png')
+				}
 			}
 		}
 	})
@@ -199,20 +223,20 @@ function updateCate(name) {
 
 function updateSubmit(obj) {
 	$(obj).attr('disabled', 'disabled')
-	var data = {
-		_id: _id,
-		order: $('input[name=update_order]').val(),
-		name: $('input[name=update_name]').val(),
-		url: $('input[name=update_url]').val(),
-		description: $('input[name=update_description]').val(),
-	}
+
+	// 创建一个FormData
+	var formData = new FormData($("#updateUploadFile")[0])
 
 	$.ajax({
 		type: 'POST',
 		url: '/category/updateCate',
-		data: data,
-		dataType: 'json',
-		success: function(data) {
+		data: formData,
+		async: false,
+    cache: false,
+    contentType: false,
+    processData: false,
+		success: function (data) {
+			console.log(data)
 			layerCode(data.code, data.msg, obj)
 		}
 	})

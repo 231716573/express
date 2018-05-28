@@ -103,11 +103,13 @@ function getCate() {
 		type: 'GET',
 		url: '/category/getCategory',
 		success: function (data) {
-			// console.log(data);
+			console.log(data);
 			if (data.code == 0) {
 				var newNav = '';
-				for (var i = 0; i < data.data.length; i++) {
-					newNav += '<div><img src="/category/thunmb'+i+'.jpg"><h3>'+data.data[i].name+'</h3><p>'+data.data[i].description+'</p><a href="'+data.data[i]._id+'">详情+</a></div>'
+				for (var i = 0; i < 4; i++) {
+          var newImg = data.data[i].thunmb ? '/category/'+data.data[i].thunmb : '/images/cate_bg.jpg';
+
+					newNav += '<div><img src="'+newImg+'"><h3>'+data.data[i].name+'</h3><p>'+data.data[i].description+'</p><a href="/category?id='+data.data[i]._id+'">详情+</a></div>'
 				}
 				$('#web_xqqw .recalltype').append(newNav)
 			}
